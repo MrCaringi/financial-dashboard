@@ -709,6 +709,66 @@
     footer a:hover {
       color: var(--primary);
     }
+
+    /* Screenshot Gallery */
+    .gallery-section {
+      padding: 6rem 0 2rem;
+      text-align: center;
+    }
+    
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1.25rem;
+      margin-top: 3rem;
+    }
+    
+    @media (max-width: 1024px) {
+      .gallery-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+    
+    @media (max-width: 640px) {
+      .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .gallery-item {
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid var(--border-card);
+      background: var(--bg-card);
+      transition: var(--transition-smooth);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    .gallery-item img {
+      width: 100%;
+      height: auto;
+      display: block;
+      transition: var(--transition-smooth);
+    }
+    
+    .gallery-item:hover {
+      transform: translateY(-6px);
+      border-color: var(--border-hover);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.25);
+    }
+    
+    .gallery-item:hover img {
+      transform: scale(1.03);
+    }
+    
+    .gallery-caption {
+      padding: 0.85rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border-card);
+      background: rgba(0,0,0,0.1);
+    }
   </style>
 </head>
 <body>
@@ -940,6 +1000,35 @@
             </div>
           </div>
 
+        </div>
+      </div>
+    </section>
+
+    <!-- Mobile Interface Gallery -->
+    <section class="gallery-section">
+      <h2 style="font-size: 2.25rem; margin-bottom: 0.5rem;">Sleek Mobile Interface</h2>
+      <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto;">Designed specifically as a progressive web application. Real previews of the interface running in Demo Mode.</p>
+      
+      <div class="gallery-grid">
+        <div class="gallery-item">
+          <img src="images/dashboard_home.jpg" alt="Home Dashboard">
+          <div class="gallery-caption">Home Dashboard</div>
+        </div>
+        <div class="gallery-item">
+          <img src="images/accounts_overview.jpg" alt="Accounts Overview">
+          <div class="gallery-caption">Accounts List</div>
+        </div>
+        <div class="gallery-item">
+          <img src="images/recent_activity.jpg" alt="Recent Activity">
+          <div class="gallery-caption">Recent Activity</div>
+        </div>
+        <div class="gallery-item">
+          <img src="images/upcoming_payments.jpg" alt="Upcoming Payments">
+          <div class="gallery-caption">Upcoming Bills</div>
+        </div>
+        <div class="gallery-item">
+          <img src="images/account_settings.jpg" alt="Account Settings">
+          <div class="gallery-caption">Card Settings</div>
         </div>
       </div>
     </section>

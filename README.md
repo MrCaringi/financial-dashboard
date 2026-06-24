@@ -25,6 +25,20 @@ An interactive, responsive financial dashboard optimized for mobile layouts, con
 
 ---
 
+## Screenshots
+
+Here is a preview of the mobile-first dashboard running in **Demo Mode**:
+
+| Home Dashboard | Accounts Overview | Account Settings |
+| :---: | :---: | :---: |
+| ![Home Dashboard](docs/images/dashboard_home.jpg) | ![Accounts Overview](docs/images/accounts_overview.jpg) | ![Account Settings](docs/images/account_settings.jpg) |
+
+| Recent Activity | Upcoming Payments |
+| :---: | :---: |
+| ![Recent Activity](docs/images/recent_activity.jpg) | ![Upcoming Payments](docs/images/upcoming_payments.jpg) |
+
+---
+
 ## Getting Started
 
 ### 1. Configure Environment
