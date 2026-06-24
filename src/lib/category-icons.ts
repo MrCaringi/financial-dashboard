@@ -34,7 +34,6 @@ import {
   PawPrint,
   Printer,
   Mail,
-  Wallet,
   PiggyBank,
   CalendarDays,
   Tv,

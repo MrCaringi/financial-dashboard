@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition, useEffect, useMemo, useRef } from "react";
+import { useState, useTransition, useMemo, useRef } from "react";
 import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import { 
@@ -26,38 +26,32 @@ export function RulesEditClient({ rule, categories, bills, ruleGroups }: RulesEd
 
   // Form states
   const [title, setTitle] = useState(rule.title);
-  const [keyword, setKeyword] = useState("");
-  const [category, setCategory] = useState("");
-  const [bill, setBill] = useState("");
-  const [isCCTransfer, setIsCCTransfer] = useState(false);
+  const [keyword, setKeyword] = useState(() => {
+    const trigger = rule.triggers.find(t => t.type === "description_contains" || t.type === "description_is");
+    return trigger ? trigger.value : "";
+  });
+  const [category, setCategory] = useState(() => {
+    const action = rule.actions.find(a => a.type === "set_category");
+    return action ? action.value : "";
+  });
+  const [bill, setBill] = useState(() => {
+    const action = rule.actions.find(a => a.type === "link_to_bill");
+    return action ? action.value : "";
+  });
+  const [isCCTransfer, setIsCCTransfer] = useState(() => {
+    const action = rule.actions.find(a => a.type === "convert_transfer" && a.value === "Credit Card Clearing");
+    return !!action;
+  });
   const [active, setActive] = useState(rule.active ?? true);
   const [strict, setStrict] = useState(rule.strict ?? false);
   const [stopProcessing, setStopProcessing] = useState(rule.stopProcessing ?? false);
-  const [ruleGroupId, setRuleGroupId] = useState("");
-  const [ruleGroupTitle, setRuleGroupTitle] = useState("");
+  const [ruleGroupId, setRuleGroupId] = useState(rule.ruleGroupId || "");
+  const [ruleGroupTitle, setRuleGroupTitle] = useState(rule.ruleGroupTitle || "");
 
   // Drawer states
   const [isCategoryDrawerOpen, setIsCategoryDrawerOpen] = useState(false);
   const [isBillDrawerOpen, setIsBillDrawerOpen] = useState(false);
   const [isGroupDrawerOpen, setIsGroupDrawerOpen] = useState(false);
-
-  // Parse initial trigger keyword and actions on mount
-  useEffect(() => {
-    const keywordTrigger = rule.triggers.find(t => t.type === "description_contains" || t.type === "description_is");
-    setKeyword(keywordTrigger ? keywordTrigger.value : "");
-
-    const categoryAction = rule.actions.find(a => a.type === "set_category");
-    setCategory(categoryAction ? categoryAction.value : "");
-
-    const ccTransferAction = rule.actions.find(a => a.type === "convert_transfer" && a.value === "Credit Card Clearing");
-    setIsCCTransfer(!!ccTransferAction);
-
-    const billAction = rule.actions.find(a => a.type === "link_to_bill");
-    setBill(billAction ? billAction.value : "");
-
-    setRuleGroupId(rule.ruleGroupId || "");
-    setRuleGroupTitle(rule.ruleGroupTitle || "");
-  }, [rule]);
 
   // Handle Save
   const handleSave = (e: React.FormEvent) => {

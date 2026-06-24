@@ -40,7 +40,13 @@ export function InsightCard({ insight }: { insight: Insight }) {
   useEffect(() => {
     const key = getDismissKey(insight);
     if (!localStorage.getItem(key)) {
-      setVisible(true);
+      let active = true;
+      queueMicrotask(() => {
+        if (active) setVisible(true);
+      });
+      return () => {
+        active = false;
+      };
     }
   }, [insight]);
 

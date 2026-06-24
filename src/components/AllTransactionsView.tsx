@@ -162,7 +162,13 @@ export function AllTransactionsView({
 
   // Reset pagination when filter criteria change
   useEffect(() => {
-    setVisibleCount(50);
+    let active = true;
+    queueMicrotask(() => {
+      if (active) setVisibleCount(50);
+    });
+    return () => {
+      active = false;
+    };
   }, [searchQuery, selectedCategory, selectedAccount, selectedType, amountRange, minAmount, maxAmount, sortField, sortOrder]);
 
   const displayedTransactions = useMemo(() => {

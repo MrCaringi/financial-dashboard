@@ -19,6 +19,7 @@ const eslintConfig = defineConfig([
     "test_api4.js",
     "test_firefly.js",
     "scratch_cc.ts",
+    "public/sw.js",
   ]),
   {
     rules: {

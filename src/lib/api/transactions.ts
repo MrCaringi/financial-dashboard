@@ -229,7 +229,7 @@ export async function updateTransactionCategory(transactionId: string, journalId
 
   const updatedJournals = journals.map((j: any) => {
     if (String(j.transaction_journal_id) === journalId) {
-      const { category_id, ...rest } = j;
+      const { category_id: _, ...rest } = j;
       return { ...rest, category_name: category };
     }
     return j;

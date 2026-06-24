@@ -34,7 +34,7 @@ export default async function EditRulePage({ params }: PageProps) {
   return (
     <div className="flex flex-col gap-6 p-4 pt-12 pb-32 max-w-2xl mx-auto">
       <PageHeader backHref="/settings/rules" subtitle="Edit trigger patterns and automated actions" title="Edit Rule" />
-      <RulesEditClient rule={rule} categories={categories} bills={bills} ruleGroups={ruleGroups} />
+      <RulesEditClient key={rule.id} rule={rule} categories={categories} bills={bills} ruleGroups={ruleGroups} />
     </div>
   );
 }

@@ -7,10 +7,7 @@ import {
   getCategories,
   getCycleTransactions,
   getNetWorthHistory,
-  parseNotes,
-  Bill,
-  CreditCardPayment,
-  Transaction
+  parseNotes
 } from "@/lib/firefly";
 import { getPastPaydayCycles, formatDateString } from "@/lib/payday";
 
@@ -25,7 +22,7 @@ export interface ProjectedPayment {
   projectedBalance: number;
 }
 
-export async function getAccountsSummaryData(now = new Date()) {
+export async function getAccountsSummaryData(_now = new Date()) {
   try {
     const [assetAccounts, liabilityAccounts, billsList, netWorthHistory] = await Promise.all([
       getAssetAccounts(),

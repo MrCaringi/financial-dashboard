@@ -27,7 +27,13 @@ export function BottomSheetDrawer({
   const { style: viewportStyle } = useVisualViewport();
 
   useEffect(() => {
-    setMounted(true);
+    let active = true;
+    queueMicrotask(() => {
+      if (active) setMounted(true);
+    });
+    return () => {
+      active = false;
+    };
   }, []);
 
   useEffect(() => {

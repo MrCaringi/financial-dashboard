@@ -29,57 +29,59 @@ export function SubscriptionProjection({
   bills: Bill[];
   cards: CreditCardPayment[];
 }) {
-  const unpaidBills = bills.filter(b => !b.isPaid && b.expectedInCycle);
-  const unpaidCards = (cards || []).filter(c => c.dueDate !== null && c.balance > 0 && !c.isPaid);
+  const unpaidBills = useMemo(() => bills.filter(b => !b.isPaid && b.expectedInCycle), [bills]);
+  const unpaidCards = useMemo(() => (cards || []).filter(c => c.dueDate !== null && c.balance > 0 && !c.isPaid), [cards]);
   
-  // Merge dates to create a unified chronological x-axis
-  const allDatesSet = new Set<string>();
-  unpaidBills.forEach(b => allDatesSet.add(b.dueDate));
-  unpaidCards.forEach(c => c.dueDate && allDatesSet.add(c.dueDate));
-  
-  // Sort dates chronologically (YYYY-MM-DD strings sort perfectly alphabetically)
-  const sortedDateStrings = Array.from(allDatesSet).sort();
-  
-  // Create labels for display (e.g. "11 May")
-  const labels = sortedDateStrings.map(dateStr => {
-    const d = new Date(dateStr);
-    return d.toLocaleDateString("en-GB", { day: "numeric", month: "short" });
-  });
+  const data = useMemo(() => {
+    // Merge dates to create a unified chronological x-axis
+    const allDatesSet = new Set<string>();
+    unpaidBills.forEach(b => allDatesSet.add(b.dueDate));
+    unpaidCards.forEach(c => c.dueDate && allDatesSet.add(c.dueDate));
+    
+    // Sort dates chronologically (YYYY-MM-DD strings sort perfectly alphabetically)
+    const sortedDateStrings = Array.from(allDatesSet).sort();
+    
+    // Create labels for display (e.g. "11 May")
+    const labels = sortedDateStrings.map(dateStr => {
+      const d = new Date(dateStr);
+      return d.toLocaleDateString("en-GB", { day: "numeric", month: "short" });
+    });
 
-  // Data points corresponding to the unified x-axis labels
-  const billDataPoints = sortedDateStrings.map(dateStr => {
-    return unpaidBills
-      .filter(b => b.dueDate === dateStr)
-      .reduce((sum, b) => sum + b.amount, 0);
-  });
+    // Data points corresponding to the unified x-axis labels
+    const billDataPoints = sortedDateStrings.map(dateStr => {
+      return unpaidBills
+        .filter(b => b.dueDate === dateStr)
+        .reduce((sum, b) => sum + b.amount, 0);
+    });
 
-  const cardDataPoints = sortedDateStrings.map(dateStr => {
-    return unpaidCards
-      .filter(c => c.dueDate === dateStr)
-      .reduce((sum, c) => sum + c.balance, 0);
-  });
+    const cardDataPoints = sortedDateStrings.map(dateStr => {
+      return unpaidCards
+        .filter(c => c.dueDate === dateStr)
+        .reduce((sum, c) => sum + c.balance, 0);
+    });
 
-  const data = useMemo(() => ({
-    labels: labels.length > 0 ? labels : ["No upcoming"],
-    datasets: [
-      {
-        fill: true,
-        label: "Subscriptions",
-        data: billDataPoints.length > 0 ? billDataPoints : [0],
-        borderColor: "rgba(245, 158, 11, 0.95)", // amber-500
-        backgroundColor: "rgba(245, 158, 11, 0.15)",
-        tension: 0.4,
-      },
-      {
-        fill: true,
-        label: "Card Payments",
-        data: cardDataPoints.length > 0 ? cardDataPoints : [0],
-        borderColor: "rgba(244, 63, 94, 0.95)", // rose-500
-        backgroundColor: "rgba(244, 63, 94, 0.15)",
-        tension: 0.4,
-      },
-    ],
-  }), [labels, billDataPoints, cardDataPoints]);
+    return {
+      labels: labels.length > 0 ? labels : ["No upcoming"],
+      datasets: [
+        {
+          fill: true,
+          label: "Subscriptions",
+          data: billDataPoints.length > 0 ? billDataPoints : [0],
+          borderColor: "rgba(245, 158, 11, 0.95)", // amber-500
+          backgroundColor: "rgba(245, 158, 11, 0.15)",
+          tension: 0.4,
+        },
+        {
+          fill: true,
+          label: "Card Payments",
+          data: cardDataPoints.length > 0 ? cardDataPoints : [0],
+          borderColor: "rgba(244, 63, 94, 0.95)", // rose-500
+          backgroundColor: "rgba(244, 63, 94, 0.15)",
+          tension: 0.4,
+        },
+      ],
+    };
+  }, [unpaidBills, unpaidCards]);
 
   const options = useMemo(() => ({
     responsive: true,

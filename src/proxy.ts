@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server";
 
 const SESSION_SECRET = process.env.SESSION_SECRET || "";
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Paths that do not require authentication

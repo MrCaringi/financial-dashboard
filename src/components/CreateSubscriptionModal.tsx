@@ -29,10 +29,18 @@ export function CreateSubscriptionModal({
   // Initialize values when modal opens
   useEffect(() => {
     if (isOpen) {
-      const cleaned = cleanTransactionDescription(transactionName);
-      setBillName(cleaned);
-      setAmount(Math.abs(transactionAmount));
-      setError(null);
+      let active = true;
+      queueMicrotask(() => {
+        if (active) {
+          const cleaned = cleanTransactionDescription(transactionName);
+          setBillName(cleaned);
+          setAmount(Math.abs(transactionAmount));
+          setError(null);
+        }
+      });
+      return () => {
+        active = false;
+      };
     }
   }, [isOpen, transactionName, transactionAmount]);
 

@@ -28,7 +28,13 @@ export function GlassDialog({
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
+    let active = true;
+    queueMicrotask(() => {
+      if (active) setMounted(true);
+    });
+    return () => {
+      active = false;
+    };
   }, []);
 
   useEffect(() => {
