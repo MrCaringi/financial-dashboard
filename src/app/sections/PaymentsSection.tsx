@@ -9,7 +9,7 @@ export async function PaymentsSection() {
   const data = await getUpcomingPaymentsData();
 
   return (
-    <section className="flex flex-col gap-4">
+    <section id="upcoming" className="flex flex-col gap-4 scroll-mt-20">
       <div className="flex justify-between items-center px-2">
         <h3 className="text-lg font-bold text-zinc-100">Upcoming Payments</h3>
         {data.projectedPayments.length > 0 && (
