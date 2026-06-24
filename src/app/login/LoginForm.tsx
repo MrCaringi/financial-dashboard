@@ -30,16 +30,48 @@ export function LoginForm({ isSetup }: { isSetup: boolean }) {
         </div>
 
         <form action={formAction} className="space-y-6">
+          {!isSetup && (
+            <>
+              <div>
+                <label htmlFor="fireflyApiUrl" className="block text-sm font-medium text-foreground mb-2">
+                  Firefly API URL
+                </label>
+                <input
+                  type="url"
+                  id="fireflyApiUrl"
+                  name="fireflyApiUrl"
+                  required
+                  placeholder="e.g. http://192.168.50.100:8080"
+                  className="w-full px-4 py-3 rounded-xl bg-black/50 border border-white/10 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="fireflyPat" className="block text-sm font-medium text-foreground mb-2">
+                  Firefly Personal Access Token (PAT)
+                </label>
+                <input
+                  type="password"
+                  id="fireflyPat"
+                  name="fireflyPat"
+                  required
+                  placeholder="Enter your Firefly PAT"
+                  className="w-full px-4 py-3 rounded-xl bg-black/50 border border-white/10 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
+                />
+              </div>
+            </>
+          )}
+
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-foreground mb-2">
-              Password
+              {isSetup ? "Password" : "Dashboard Password"}
             </label>
             <input
               type="password"
               id="password"
               name="password"
               required
-              placeholder={isSetup ? "Enter your password" : "Create a secure password"}
+              placeholder={isSetup ? "Enter your password" : "Create a secure dashboard password"}
               className="w-full px-4 py-3 rounded-xl bg-black/50 border border-white/10 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
             />
           </div>

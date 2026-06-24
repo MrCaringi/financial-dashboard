@@ -1,11 +1,28 @@
 import fs from "fs";
 import path from "path";
 
+const AUTH_FILE_PATH = process.env.AUTH_FILE_PATH || path.join(process.cwd(), ".dashboard_auth");
+
+function getStoredAuthData() {
+  try {
+    if (fs.existsSync(AUTH_FILE_PATH)) {
+      return JSON.parse(fs.readFileSync(AUTH_FILE_PATH, "utf-8"));
+    }
+  } catch (e) {
+    console.error("Failed to parse stored auth details:", e);
+  }
+  return null;
+}
+
 export function getActiveApiUrl(): string {
   try {
     const overridePath = path.join(process.cwd(), ".url_override");
     if (fs.existsSync(overridePath)) {
       return fs.readFileSync(overridePath, "utf-8").trim();
+    }
+    const stored = getStoredAuthData();
+    if (stored?.fireflyApiUrl) {
+      return stored.fireflyApiUrl;
     }
   } catch (err) {
     console.error("Failed to read API URL override file:", err);
@@ -18,6 +35,10 @@ export function getActivePat(): string {
     const overridePath = path.join(process.cwd(), ".pat_override");
     if (fs.existsSync(overridePath)) {
       return fs.readFileSync(overridePath, "utf-8").trim();
+    }
+    const stored = getStoredAuthData();
+    if (stored?.fireflyPat) {
+      return stored.fireflyPat;
     }
   } catch (err) {
     console.error("Failed to read PAT override file:", err);
