@@ -133,6 +133,21 @@ import path from "path";
 
 export async function updateFireflyPat(newPat: string | null): Promise<{ success: boolean; error?: string }> {
   try {
+    const AUTH_FILE_PATH = process.env.AUTH_FILE_PATH || path.join(process.cwd(), ".dashboard_auth");
+    if (fs.existsSync(AUTH_FILE_PATH)) {
+      try {
+        const authData = JSON.parse(fs.readFileSync(AUTH_FILE_PATH, "utf-8"));
+        if (newPat === null || newPat.trim() === "") {
+          delete authData.fireflyPat;
+        } else {
+          authData.fireflyPat = newPat.trim();
+        }
+        fs.writeFileSync(AUTH_FILE_PATH, JSON.stringify(authData, null, 2), "utf-8");
+      } catch (e) {
+        console.error("Failed to update PAT in .dashboard_auth:", e);
+      }
+    }
+
     const overridePath = path.join(process.cwd(), ".pat_override");
     if (newPat === null || newPat.trim() === "") {
       if (fs.existsSync(overridePath)) {
@@ -155,6 +170,21 @@ export async function updateFireflyPat(newPat: string | null): Promise<{ success
 
 export async function updateFireflyUrl(newUrl: string | null): Promise<{ success: boolean; error?: string }> {
   try {
+    const AUTH_FILE_PATH = process.env.AUTH_FILE_PATH || path.join(process.cwd(), ".dashboard_auth");
+    if (fs.existsSync(AUTH_FILE_PATH)) {
+      try {
+        const authData = JSON.parse(fs.readFileSync(AUTH_FILE_PATH, "utf-8"));
+        if (newUrl === null || newUrl.trim() === "") {
+          delete authData.fireflyApiUrl;
+        } else {
+          authData.fireflyApiUrl = newUrl.trim();
+        }
+        fs.writeFileSync(AUTH_FILE_PATH, JSON.stringify(authData, null, 2), "utf-8");
+      } catch (e) {
+        console.error("Failed to update URL in .dashboard_auth:", e);
+      }
+    }
+
     const overridePath = path.join(process.cwd(), ".url_override");
     if (newUrl === null || newUrl.trim() === "") {
       if (fs.existsSync(overridePath)) {

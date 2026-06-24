@@ -7,27 +7,43 @@ import { ApiConnectionClient } from "./ApiConnectionClient";
 export const dynamic = "force-dynamic";
 
 export default async function ApiConnectionPage() {
+  const AUTH_FILE_PATH = process.env.AUTH_FILE_PATH || path.join(process.cwd(), ".dashboard_auth");
+  let storedPat = "";
+  let storedUrl = "";
+  try {
+    if (fs.existsSync(AUTH_FILE_PATH)) {
+      const stored = JSON.parse(fs.readFileSync(AUTH_FILE_PATH, "utf-8"));
+      storedPat = stored?.fireflyPat || "";
+      storedUrl = stored?.fireflyApiUrl || "";
+    }
+  } catch (e) {
+    console.error("Failed to read stored auth file:", e);
+  }
+
   const apiUrl = getActiveApiUrl();
-  let urlSource: "env" | "override" = "env";
-
-  let patSource: "env" | "override" | "none" = "none";
-  let activePatMasked = "";
-
+  let urlSource: "env" | "override" | "auth_file" = "env";
   const urlOverridePath = path.join(process.cwd(), ".url_override");
   if (fs.existsSync(urlOverridePath)) {
     urlSource = "override";
+  } else if (storedUrl) {
+    urlSource = "auth_file";
   }
 
-  const overridePath = path.join(process.cwd(), ".pat_override");
+  let patSource: "env" | "override" | "auth_file" | "none" = "none";
   let patValue = "";
+  const overridePath = path.join(process.cwd(), ".pat_override");
   if (fs.existsSync(overridePath)) {
     patSource = "override";
     patValue = fs.readFileSync(overridePath, "utf-8").trim();
+  } else if (storedPat) {
+    patSource = "auth_file";
+    patValue = storedPat;
   } else if (process.env.FIREFLY_PAT) {
     patSource = "env";
     patValue = process.env.FIREFLY_PAT;
   }
 
+  let activePatMasked = "";
   if (patValue) {
     activePatMasked = patValue.length <= 10 
       ? "****" 

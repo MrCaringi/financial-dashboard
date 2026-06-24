@@ -7,8 +7,8 @@ import { Database, Loader2, Check, AlertCircle, Save, Trash2, Eye, EyeOff } from
 
 interface ApiConnectionClientProps {
   apiUrl: string;
-  urlSource: "env" | "override";
-  patSource: "env" | "override" | "none";
+  urlSource: "env" | "override" | "auth_file";
+  patSource: "env" | "override" | "auth_file" | "none";
   activePatMasked: string;
 }
 
@@ -102,7 +102,7 @@ export function ApiConnectionClient({
         <div className="flex justify-between items-center text-xs">
           <span className="font-bold text-zinc-400 uppercase tracking-wide">API Address</span>
           <span className="text-zinc-500 text-[10px]">
-            Source: {urlSource === "override" ? "Custom Override" : "Environment (.env)"}
+            Source: {urlSource === "override" ? "Custom Override" : urlSource === "auth_file" ? "Persistent Auth File" : "Environment (.env)"}
           </span>
         </div>
 
@@ -122,7 +122,7 @@ export function ApiConnectionClient({
         </div>
 
         <div className="flex flex-wrap gap-2 justify-end mt-1">
-          {urlSource === "override" && (
+          {(urlSource === "override" || urlSource === "auth_file") && (
             <button
               type="button"
               onClick={handleRemoveUrl}
@@ -165,7 +165,7 @@ export function ApiConnectionClient({
         <div className="flex justify-between items-center text-xs">
           <span className="font-bold text-zinc-400 uppercase tracking-wide">Access Token Key</span>
           <span className="text-zinc-500 text-[10px]">
-            Source: {patSource === "override" ? "Custom Override" : patSource === "env" ? "Environment (.env)" : "None"}
+            Source: {patSource === "override" ? "Custom Override" : patSource === "auth_file" ? "Persistent Auth File" : patSource === "env" ? "Environment (.env)" : "None"}
           </span>
         </div>
         
@@ -200,7 +200,7 @@ export function ApiConnectionClient({
         </div>
 
         <div className="flex flex-wrap gap-2 justify-end mt-2">
-          {patSource === "override" && (
+          {(patSource === "override" || patSource === "auth_file") && (
             <button
               type="button"
               onClick={handleRemovePat}
