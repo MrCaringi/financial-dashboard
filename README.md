@@ -104,7 +104,10 @@ The application is distributed as a pre-built multi-architecture Docker image (`
        environment:
          - AUTH_FILE_PATH=/app/data/.dashboard_auth
        volumes:
-         - ./data:/app/data
+         - dashboard_data:/app/data
+
+   volumes:
+     dashboard_data:
    ```
 
    **.env.local**:

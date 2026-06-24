@@ -43,7 +43,8 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 # Make sure nextjs user owns /app so it can write .dashboard_auth at runtime
-RUN chown nextjs:nodejs /app
+RUN mkdir -p /app/data
+RUN chown -R nextjs:nodejs /app
 
 USER nextjs
 

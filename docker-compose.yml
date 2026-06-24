@@ -10,4 +10,7 @@ services:
     environment:
       - AUTH_FILE_PATH=/app/data/.dashboard_auth
     volumes:
-      - ./data:/app/data
+      - dashboard_data:/app/data
+
+volumes:
+  dashboard_data:
