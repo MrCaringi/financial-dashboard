@@ -13,7 +13,7 @@ const mockGroups: AccountGroup[] = [
     subtotal: 4168.94,
     accounts: [
       { id: "2", name: "Demo Current Account", role: "defaultAsset", balance: 4161.03, displayBalance: 4161.03, currencySymbol: "£", lastActivity: "2026-05-23T00:00:00Z", isPrimarySource: true, paymentConfig: null },
-      { id: "57", name: "Starling", role: "defaultAsset", balance: 7.91, displayBalance: 7.91, currencySymbol: "£", lastActivity: "2026-05-22T00:00:00Z", isPrimarySource: false, paymentConfig: null }
+      { id: "57", name: "Demo Secondary Account", role: "defaultAsset", balance: 7.91, displayBalance: 7.91, currencySymbol: "£", lastActivity: "2026-05-22T00:00:00Z", isPrimarySource: false, paymentConfig: null }
     ]
   },
   {
@@ -22,7 +22,7 @@ const mockGroups: AccountGroup[] = [
     subtotal: 21103.16,
     accounts: [
       { id: "124", name: "Demo Savings", role: "savingAsset", balance: 1500.00, displayBalance: 1500.00, currencySymbol: "£", lastActivity: "2026-05-20T00:00:00Z", isPrimarySource: false, paymentConfig: null },
-      { id: "179", name: "Tembo", role: "savingAsset", balance: 19603.16, displayBalance: 19603.16, currencySymbol: "£", lastActivity: "2026-05-21T00:00:00Z", isPrimarySource: false, paymentConfig: null }
+      { id: "179", name: "Demo ISA", role: "savingAsset", balance: 19603.16, displayBalance: 19603.16, currencySymbol: "£", lastActivity: "2026-05-21T00:00:00Z", isPrimarySource: false, paymentConfig: null }
     ]
   },
   {
@@ -31,9 +31,9 @@ const mockGroups: AccountGroup[] = [
     subtotal: 15245.38,
     accounts: [
       { id: "1", name: "Demo Credit Card A", role: "ccAsset", balance: -4005.30, displayBalance: 4005.30, currencySymbol: "£", lastActivity: "2026-05-20T00:00:00Z", isPrimarySource: false, paymentConfig: { calcType: "full", statementDay: 15, dueDay: 11 } },
-      { id: "100", name: "Amazon Barclaycard", role: "ccAsset", balance: -197.90, displayBalance: 197.90, currencySymbol: "£", lastActivity: "2026-05-18T00:00:00Z", isPrimarySource: false, paymentConfig: { calcType: "full", statementDay: 5, dueDay: 28 } },
-      { id: "130", name: "HSBC Credit Card", role: " ccAsset", balance: -5900.04, displayBalance: 5900.04, currencySymbol: "£", lastActivity: "2026-05-19T00:00:00Z", isPrimarySource: false, paymentConfig: { calcType: "min", minPercent: 0.025, minFloor: 5.00, statementDay: 31, dueDay: 27 } },
-      { id: "131", name: "M&S Credit Card", role: "ccAsset", balance: -5142.14, displayBalance: 5142.14, currencySymbol: "£", lastActivity: "2026-05-20T00:00:00Z", isPrimarySource: false, paymentConfig: { calcType: "min", minPercent: 0.025, minFloor: 5.00, statementDay: 5, dueDay: 30 } }
+      { id: "100", name: "Demo Credit Card B", role: "ccAsset", balance: -197.90, displayBalance: 197.90, currencySymbol: "£", lastActivity: "2026-05-18T00:00:00Z", isPrimarySource: false, paymentConfig: { calcType: "full", statementDay: 5, dueDay: 28 } },
+      { id: "130", name: "Demo Credit Card C", role: "ccAsset", balance: -5900.04, displayBalance: 5900.04, currencySymbol: "£", lastActivity: "2026-05-19T00:00:00Z", isPrimarySource: false, paymentConfig: { calcType: "min", minPercent: 0.025, minFloor: 5.00, statementDay: 31, dueDay: 27 } },
+      { id: "131", name: "Demo Credit Card D", role: "ccAsset", balance: -5142.14, displayBalance: 5142.14, currencySymbol: "£", lastActivity: "2026-05-20T00:00:00Z", isPrimarySource: false, paymentConfig: { calcType: "min", minPercent: 0.025, minFloor: 5.00, statementDay: 5, dueDay: 30 } }
     ]
   }
 ];
