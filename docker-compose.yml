@@ -1,11 +1,13 @@
 services:
   dashboard:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: ghcr.io/giorobert88/financial-dashboard:latest
     container_name: firefly-dashboard
     restart: unless-stopped
     ports:
       - "3001:3000"
     env_file:
       - .env.local
+    environment:
+      - AUTH_FILE_PATH=/app/data/.dashboard_auth
+    volumes:
+      - ./data:/app/data

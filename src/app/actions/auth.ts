@@ -6,7 +6,7 @@ import fs from "fs";
 import path from "path";
 import crypto from "crypto";
 
-const AUTH_FILE_PATH = path.join(process.cwd(), ".dashboard_auth");
+const AUTH_FILE_PATH = process.env.AUTH_FILE_PATH || path.join(process.cwd(), ".dashboard_auth");
 const SESSION_SECRET = process.env.SESSION_SECRET || "";
 
 export async function checkIsSetup() {
@@ -27,6 +27,11 @@ export async function createPasswordAction(prevState: any, formData: FormData) {
   // Hash the password with the session secret as a pepper
   const hashedPassword = crypto.createHash("sha256").update(password + SESSION_SECRET).digest("hex");
   
+  // Ensure the target directory exists
+  const dir = path.dirname(AUTH_FILE_PATH);
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
   // Save the password to the local file
   fs.writeFileSync(AUTH_FILE_PATH, hashedPassword, "utf-8");
 

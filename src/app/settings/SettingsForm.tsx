@@ -13,7 +13,8 @@ import {
   Globe,
   Calendar,
   Wallet,
-  AlertTriangle
+  AlertTriangle,
+  MonitorPlay
 } from "lucide-react";
 
 import Link from "next/link";
@@ -21,11 +22,13 @@ import Link from "next/link";
 interface SettingsFormProps {
   apiUrl: string;
   isMock: boolean;
+  demoModeActive?: boolean;
 }
 
 export function SettingsForm({
   apiUrl,
   isMock,
+  demoModeActive = false,
 }: SettingsFormProps) {
   const router = useRouter();
 
@@ -40,6 +43,15 @@ export function SettingsForm({
       setRefreshStatus("Dashboard cache cleared successfully!");
       router.refresh();
       setTimeout(() => setRefreshStatus(null), 3000);
+    });
+  };
+
+  const [isDemoPending, startDemoTransition] = useTransition();
+  const handleDemoToggle = () => {
+    startDemoTransition(async () => {
+      const { toggleDemoMode } = await import("./actions");
+      await toggleDemoMode(!demoModeActive);
+      router.refresh();
     });
   };
 
@@ -156,7 +168,36 @@ export function SettingsForm({
         </Link>
       </div>
 
-      {/* 5. Cache Clear / Refresh Card */}
+      {/* 5. Demo Mode Toggle Card */}
+      <div className="glass-card p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${
+            demoModeActive ? "bg-fuchsia-500/20 text-fuchsia-400" : "bg-zinc-500/10 text-zinc-400"
+          }`}>
+            <MonitorPlay size={20} />
+          </div>
+          <div>
+            <h3 className="text-sm font-semibold text-zinc-100">Demo Mode</h3>
+            <p className="text-xs text-zinc-450 mt-0.5 max-w-[280px]">
+              Obscures bank names and amounts. Data mutations are mocked without modifying your actual backend.
+            </p>
+          </div>
+        </div>
+
+        <button
+          onClick={handleDemoToggle}
+          disabled={isDemoPending}
+          className={`relative w-12 h-6 rounded-full transition-colors ${
+            demoModeActive ? "bg-fuchsia-500" : "bg-zinc-700"
+          } ${isDemoPending ? "opacity-50" : ""}`}
+        >
+          <div className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform ${
+            demoModeActive ? "translate-x-6" : "translate-x-0"
+          }`} />
+        </button>
+      </div>
+
+      {/* 6. Cache Clear / Refresh Card */}
       <section className="flex flex-col gap-3 mt-4">
         <div className="flex items-center gap-2 px-2 text-rose-500">
           <AlertTriangle size={14} />

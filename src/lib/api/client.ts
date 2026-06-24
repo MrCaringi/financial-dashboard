@@ -25,11 +25,66 @@ export function getActivePat(): string {
   return process.env.FIREFLY_PAT || "";
 }
 
+export async function isDemoModeActive(): Promise<boolean> {
+  try {
+    const { cookies } = await import("next/headers");
+    const cookieStore = await cookies();
+    return cookieStore.get("demo_mode")?.value === "true";
+  } catch {
+    return false;
+  }
+}
+
+const demoNameMap: Record<string, string> = {};
+let demoCounter = 1;
+function getDemoName(realName: string | null | undefined): string {
+  if (!realName) return "Unknown";
+  if (!demoNameMap[realName]) {
+    demoNameMap[realName] = `Demo Entity ${demoCounter++}`;
+  }
+  return demoNameMap[realName];
+}
+
+function scaleValue(valStr: string | null | undefined): string {
+  if (!valStr) return "0";
+  const num = parseFloat(valStr);
+  if (isNaN(num)) return valStr;
+  return (num * 0.65).toFixed(2);
+}
+
+export function anonymizeData(data: any): any {
+  if (!data) return data;
+  if (Array.isArray(data)) {
+    return data.map(item => anonymizeData(item));
+  }
+  if (typeof data === "object") {
+    const newData: any = {};
+    for (const [key, value] of Object.entries(data)) {
+      if (key === "name" || key === "source_name" || key === "destination_name" || key === "description" || key === "title") {
+        newData[key] = typeof value === "string" ? getDemoName(value) : value;
+      } else if (key === "current_balance" || key === "balance" || key === "amount" || key === "amount_min" || key === "amount_max") {
+        newData[key] = typeof value === "string" ? scaleValue(value) : value;
+      } else {
+        newData[key] = anonymizeData(value);
+      }
+    }
+    return newData;
+  }
+  return data;
+}
+
 export async function fetchFirefly(
   endpoint: string,
   params: Record<string, string> = {},
   options: RequestInit = {}
 ) {
+  const isDemo = await isDemoModeActive();
+  
+  if (isDemo && options.method && ["POST", "PUT", "PATCH", "DELETE"].includes(options.method.toUpperCase())) {
+    console.log(`Demo Mode: Intercepted ${options.method} request to ${endpoint}`);
+    return { data: { id: "demo-id", type: "success", attributes: { name: "Demo Success", amount_min: "0", amount_max: "0", active: true } } };
+  }
+
   const apiUrl = getActiveApiUrl();
   const url = new URL(`${apiUrl}/api/v1${endpoint}`);
   
@@ -65,7 +120,11 @@ export async function fetchFirefly(
     throw new Error(`Firefly API failed: ${response.statusText}`);
   }
 
-  return response.json();
+  let jsonData = await response.json();
+  if (isDemo) {
+    jsonData = anonymizeData(jsonData);
+  }
+  return jsonData;
 }
 
 /** Mutation helper for PUT/PATCH requests to Firefly III */
@@ -74,6 +133,15 @@ export async function mutateFirefly(
   method: "PUT" | "PATCH",
   body: unknown,
 ): Promise<Response> {
+  const isDemo = await isDemoModeActive();
+  if (isDemo) {
+    console.log(`Demo Mode: Intercepted ${method} request to ${endpoint}`);
+    return new Response(JSON.stringify({ data: { id: "demo-id", type: "success", attributes: {} } }), {
+      status: 200,
+      headers: { "Content-Type": "application/json" }
+    });
+  }
+
   const apiUrl = getActiveApiUrl();
   const url = `${apiUrl}/api/v1${endpoint}`;
   const pat = getActivePat();

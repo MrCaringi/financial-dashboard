@@ -5,6 +5,7 @@ import { SettingsForm } from "./SettingsForm";
 import { logoutAction } from "@/app/actions/auth";
 import fs from "fs";
 import path from "path";
+import { cookies } from "next/headers";
 
 export const dynamic = "force-dynamic";
 
@@ -13,6 +14,9 @@ export default async function SettingsPage() {
   let creditCardAccounts: GroupedAccount[] = [];
   let initialPrimaryAccountId: string | null = null;
   let isMock = false;
+
+  const cookieStore = await cookies();
+  const demoModeActive = cookieStore.get("demo_mode")?.value === "true";
 
   const apiUrl = getActiveApiUrl();
   let urlSource: "env" | "override" = "env";
@@ -67,6 +71,7 @@ export default async function SettingsPage() {
       <SettingsForm
         apiUrl={apiUrl}
         isMock={isMock}
+        demoModeActive={demoModeActive}
       />
 
       <div className="mt-8 px-2">

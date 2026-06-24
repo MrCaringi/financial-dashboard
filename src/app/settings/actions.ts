@@ -107,6 +107,26 @@ export async function forceRefresh(): Promise<{ success: boolean }> {
   return { success: true };
 }
 
+export async function toggleDemoMode(enabled: boolean): Promise<{ success: boolean }> {
+  const { cookies } = await import("next/headers");
+  const cookieStore = await cookies();
+  
+  if (enabled) {
+    cookieStore.set("demo_mode", "true", { path: "/" });
+  } else {
+    cookieStore.delete("demo_mode");
+  }
+
+  // Clear cache and refresh all routes
+  clearNetWorthCache();
+  revalidatePath("/");
+  revalidatePath("/accounts");
+  revalidatePath("/settings");
+  revalidatePath("/dashboard");
+  revalidatePath("/uncategorized");
+  return { success: true };
+}
+
 import fs from "fs";
 import path from "path";
 

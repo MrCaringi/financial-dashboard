@@ -42,7 +42,9 @@ FIREFLY_PAT="your-firefly-personal-access-token"
 SESSION_SECRET="generate-with-openssl-rand-base64-32"
 ```
 
-> **Tip:** Generate a secure session secret with: `openssl rand -base64 32`
+> **Tips:**
+> - Generate a secure session secret with: `openssl rand -base64 32`
+> - You can obtain your `FIREFLY_PAT` (Personal Access Token) inside Firefly III by navigating to **Options > Profile > OAuth > Personal Access Tokens** and generating a new token.
 
 ### 2. Install Dependencies
 
@@ -66,25 +68,44 @@ On first launch, you'll be prompted to create a dashboard password. This passwor
 
 ## Docker Deployment
 
-The application is containerized and runs in standalone mode using Docker Compose.
-
-### Docker Structure
-- **Dockerfile**: Multi-stage build using `node:22-alpine`. Next.js is configured for `output: "standalone"` to keep the production image lightweight.
-- **.dockerignore**: Excludes `node_modules`, `.next`, and `.env` files from the build context.
-- **docker-compose.yml**: Maps external host port `3001` to internal container port `3000`, and passes `.env.local` as `env_file`.
+The application is distributed as a pre-built multi-architecture Docker image (`linux/amd64` and `linux/arm64`) via GitHub Container Registry (GHCR), meaning you don't even need the source code to run it.
 
 ### Running with Docker
 
-```bash
-# Build and start
-docker compose up --build -d
+1. **Prepare configuration files** in a dedicated directory on your server:
 
-# Stop
-docker compose down
+   **docker-compose.yml**:
+   ```yaml
+   services:
+     dashboard:
+       image: ghcr.io/giorobert88/financial-dashboard:latest
+       container_name: firefly-dashboard
+       restart: unless-stopped
+       ports:
+         - "3001:3000"
+       env_file:
+         - .env.local
+       environment:
+         - AUTH_FILE_PATH=/app/data/.dashboard_auth
+       volumes:
+         - ./data:/app/data
+   ```
 
-# View logs
-docker compose logs -f
-```
+   **.env.local**:
+   ```env
+   FIREFLY_API_URL="http://your-firefly-server:8080"
+   FIREFLY_PAT="your-firefly-personal-access-token"
+   SESSION_SECRET="generate-with-openssl-rand-base64-32"
+   ```
+
+2. **Start the container**:
+   ```bash
+   docker compose up -d
+   ```
+
+To stop the dashboard: `docker compose down`. To inspect output: `docker compose logs -f`.
+
+*Note: The `./data` directory will be created automatically to securely persist your dashboard password across container updates.*
 
 ---
 

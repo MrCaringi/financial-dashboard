@@ -951,7 +951,7 @@
           <i data-lucide="shield"></i>
         </div>
         <h3>100% Private & Self-Hosted</h3>
-        <p>Your financial data stays within your local network. No external servers or cloud processors read your transaction history. Fully verified clean from telemetry.</p>
+        <p>Your financial data stays within your local network. Includes a built-in Privacy Demo Mode to dynamically mask balances and account names when taking screenshots or presenting.</p>
       </div>
 
       <div class="feature-card">
@@ -990,8 +990,8 @@
         <div class="feature-icon-wrapper">
           <i data-lucide="cpu"></i>
         </div>
-        <h3>Docker Native</h3>
-        <p>Deploys smoothly via Docker Compose on Raspberry Pi or standard home servers. Lightweight Alpine runner utilizes Next.js standalone optimization.</p>
+        <h3>Pre-Built Docker Image</h3>
+        <p>Runs natively via Docker Compose. Multi-arch support is built-in (works out of the box on Raspberry Pi ARM64 and standard x86 servers) without local build overhead.</p>
       </div>
     </section>
 
@@ -1036,17 +1036,12 @@
           <!-- Docker Tab -->
           <div id="term-docker" class="terminal-pane">
             <div class="code-row">
-              <span><span class="code-comment"># Copy configurations and environment variables</span><br>cp .env.example .env.local<br>nano .env.local</span>
-              <button class="copy-btn" onclick="copyText('cp .env.example .env.local && nano .env.local')"><i data-lucide="copy" style="width:16px;height:16px;"></i></button>
-            </div>
-            
-            <div class="code-row">
-              <span><span class="code-comment"># Spin up container on port 3001 in detached mode</span><br>docker compose up --build -d</span>
-              <button class="copy-btn" onclick="copyText('docker compose up --build -d')"><i data-lucide="copy" style="width:16px;height:16px;"></i></button>
+              <span><span class="code-comment"># Create docker-compose.yml and .env.local, then:</span><br>docker compose up -d</span>
+              <button class="copy-btn" onclick="copyText('docker compose up -d')"><i data-lucide="copy" style="width:16px;height:16px;"></i></button>
             </div>
 
             <div class="code-row">
-              <span><span class="code-comment"># Verify build and monitor container runtime logs</span><br>docker compose logs -f</span>
+              <span><span class="code-comment"># Monitor container startup logs</span><br>docker compose logs -f</span>
               <button class="copy-btn" onclick="copyText('docker compose logs -f')"><i data-lucide="copy" style="width:16px;height:16px;"></i></button>
             </div>
           </div>
