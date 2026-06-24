@@ -41,7 +41,7 @@ export function LoginForm({ isSetup }: { isSetup: boolean }) {
                   id="fireflyApiUrl"
                   name="fireflyApiUrl"
                   required
-                  placeholder="e.g. http://192.168.50.100:8080"
+                  placeholder="e.g. http://192.168.1.100:8080"
                   className="w-full px-4 py-3 rounded-xl bg-black/50 border border-white/10 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
                 />
               </div>
