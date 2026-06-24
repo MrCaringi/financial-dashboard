@@ -1,0 +1,236 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-error: var(--error);
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-element: var(--radius-element);
+}
+
+@layer base {
+  :root {
+    --background: #f8fafc;
+    --foreground: #0f172a;
+    --card: #ffffff;
+    --card-foreground: #0f172a;
+    --popover: #ffffff;
+    --popover-foreground: #0f172a;
+    --primary: #3b82f6;
+    --primary-foreground: #ffffff;
+    --secondary: #e2e8f0;
+    --secondary-foreground: #0f172a;
+    --muted: #f1f5f9;
+    --muted-foreground: #64748b;
+    --accent: #f1f5f9;
+    --accent-foreground: #0f172a;
+    --destructive: #ef4444;
+    --destructive-foreground: #ffffff;
+    --border: #e2e8f0;
+    --input: #e2e8f0;
+    --ring: #3b82f6;
+    --radius: 1rem;
+    --radius-element: 0.75rem;
+    --success: #16a34a;
+    --warning: #f59e0b;
+    --error: #ef4444;
+  }
+
+  .dark {
+    --background: #09090b;
+    --foreground: #fafafa;
+    --card: #0e0e11;
+    --card-foreground: #fafafa;
+    --popover: #0e0e11;
+    --popover-foreground: #fafafa;
+    --primary: #fafafa;
+    --primary-foreground: #09090b;
+    --secondary: #18181b;
+    --secondary-foreground: #fafafa;
+    --muted: #18181b;
+    --muted-foreground: #a1a1aa;
+    --accent: #18181b;
+    --accent-foreground: #fafafa;
+    --destructive: #dc2626;
+    --destructive-foreground: #f9fafb;
+    --border: rgba(255, 255, 255, 0.08);
+    --input: rgba(255, 255, 255, 0.08);
+    --ring: #3f3f46;
+    --chart-1: #fafafa;
+    --chart-2: #e4e4e7;
+    --chart-3: #a1a1aa;
+    --chart-4: #717177;
+    --chart-5: #3f3f46;
+    --error: #ef4444;
+  }
+
+  * {
+    @apply border-border outline-ring/50;
+    border-color: var(--border);
+    /* Remove 300ms tap delay on all interactive elements */
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    @apply bg-background text-foreground;
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans), system-ui, Arial, sans-serif;
+    overscroll-behavior-y: none;
+    /* iOS momentum scrolling */
+    -webkit-overflow-scrolling: touch;
+    /* Allow vertical scroll without delay */
+    touch-action: pan-y;
+  }
+  html {
+    @apply font-sans;
+    height: 100%;
+  }
+  a, button, [role="button"] {
+    touch-action: manipulation;
+  }
+}
+
+/* Glassmorphism utilities */
+@layer utilities {
+  .glass {
+    background-color: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    transform: translateZ(0);
+  }
+
+  .dark .glass {
+    background-color: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .glass-card {
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.2);
+    border-radius: var(--radius);
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .safe-area-pb {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  .bottom-nav-fixed {
+    transform: none !important;
+  }
+
+  @keyframes count-bounce {
+    0% { transform: scale(1); }
+    30% { transform: scale(1.3); }
+    60% { transform: scale(0.9); }
+    100% { transform: scale(1); }
+  }
+
+  .animate-count-bounce {
+    animation: count-bounce 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  @keyframes celebrate-in {
+    0% { transform: scale(0.92); opacity: 0; }
+    70% { transform: scale(1.03); opacity: 0.9; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  .animate-celebrate-in {
+    animation: celebrate-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+
+  @keyframes success-flash-border {
+    0% { border-color: var(--border); }
+    15% { border-color: rgba(16, 185, 129, 0.6); }
+    85% { border-color: rgba(16, 185, 129, 0.6); }
+    100% { border-color: var(--border); }
+  }
+
+  .animate-success-flash {
+    animation: success-flash-border 0.4s ease-in-out forwards;
+  }
+
+  @keyframes drawer-backdrop-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes drawer-slide-in {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+
+  .animate-drawer-backdrop {
+    animation: drawer-backdrop-in 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .animate-drawer-slide {
+    animation: drawer-slide-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  @keyframes insight-fade-in {
+    0% { opacity: 0; transform: translateY(8px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes insight-dismiss {
+    0% { opacity: 1; transform: translateX(0); max-height: 120px; margin-bottom: 8px; }
+    100% { opacity: 0; transform: translateX(40px); max-height: 0; margin-bottom: 0; overflow: hidden; }
+  }
+
+  .animate-insight-in {
+    animation: insight-fade-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .animate-insight-out {
+    animation: insight-dismiss 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+}
