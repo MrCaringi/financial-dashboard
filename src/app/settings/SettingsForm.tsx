@@ -84,6 +84,29 @@ export function SettingsForm({
         </Link>
       </div>
 
+      {/* 2. Cycle & Payday Navigation Card */}
+      <div className="glass-card overflow-hidden">
+        <Link
+          href="/settings/payday"
+          className="w-full text-left p-4 flex items-center justify-between gap-4 hover:bg-white/5 active:bg-white/10 transition-colors block"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-violet-500/10 text-violet-400">
+              <Calendar size={20} />
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold text-zinc-100">Cycle & Payday</h3>
+              <p className="text-xs text-zinc-450 mt-0.5">
+                Configure your monthly payday rules and cycle start dates.
+              </p>
+            </div>
+          </div>
+          <div className="text-zinc-400">
+            <ChevronDown size={16} className="-rotate-90" />
+          </div>
+        </Link>
+      </div>
+
       {/* 2. Automation Rules Navigation Card */}
       <div className="glass-card overflow-hidden">
         <Link

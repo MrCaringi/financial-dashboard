@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { updateAccountNotes, getGroupedAccounts, CreditCardConfig, clearNetWorthCache } from "@/lib/firefly";
+import { PaydayConfig } from "@/lib/payday";
 
 export async function setPrimaryAccount(newAccountId: string): Promise<{ success: boolean; error?: string }> {
   let oldPrimaryId: string | null = null;
@@ -236,5 +237,46 @@ export async function updateBillAction(
   } catch (err: any) {
     console.error("Error updating bill/subscription:", err);
     return { success: false, error: err.message || "Failed to update subscription" };
+  }
+}
+
+export async function updatePaydayConfigAction(
+  config: PaydayConfig
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const AUTH_FILE_PATH = process.env.AUTH_FILE_PATH || path.join(process.cwd(), ".dashboard_auth");
+    const PAYDAY_CONFIG_PATH = process.env.PAYDAY_CONFIG_PATH || path.join(path.dirname(AUTH_FILE_PATH), ".payday_config");
+
+    if (config.ruleType === "fixed_date") {
+      const fd = config.fixedDate;
+      if (fd === undefined || isNaN(fd) || fd < 1 || fd > 31) {
+        return { success: false, error: "Fixed date must be a number between 1 and 31" };
+      }
+    }
+
+    const payload = {
+      ruleType: config.ruleType,
+      fixedDate: config.ruleType === "fixed_date" ? Number(config.fixedDate) : undefined,
+      rollbackWeekend: config.ruleType === "fixed_date" ? !!config.rollbackWeekend : undefined,
+    };
+
+    const dir = path.dirname(PAYDAY_CONFIG_PATH);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+
+    fs.writeFileSync(PAYDAY_CONFIG_PATH, JSON.stringify(payload, null, 2), "utf-8");
+
+    clearNetWorthCache();
+    revalidatePath("/");
+    revalidatePath("/accounts");
+    revalidatePath("/settings");
+    revalidatePath("/dashboard");
+    revalidatePath("/uncategorized");
+
+    return { success: true };
+  } catch (err: any) {
+    console.error("Error updating payday config:", err);
+    return { success: false, error: err.message || "Failed to update payday configuration" };
   }
 }

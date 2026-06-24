@@ -1,17 +1,75 @@
+import fs from "fs";
+import path from "path";
+
+export interface PaydayConfig {
+  ruleType: "fixed_date" | "last_working_day" | "last_friday";
+  fixedDate?: number; // 1-31
+  rollbackWeekend?: boolean; // If true, shifts to preceding Friday if on a weekend
+}
+
+const AUTH_FILE_PATH = process.env.AUTH_FILE_PATH || path.join(process.cwd(), ".dashboard_auth");
+const PAYDAY_CONFIG_PATH = process.env.PAYDAY_CONFIG_PATH || path.join(path.dirname(AUTH_FILE_PATH), ".payday_config");
+
+export function getPaydayConfig(): PaydayConfig {
+  try {
+    if (fs.existsSync(PAYDAY_CONFIG_PATH)) {
+      const data = JSON.parse(fs.readFileSync(PAYDAY_CONFIG_PATH, "utf-8"));
+      if (data && typeof data === "object") {
+        return {
+          ruleType: data.ruleType || "fixed_date",
+          fixedDate: typeof data.fixedDate === "number" ? data.fixedDate : 20,
+          rollbackWeekend: typeof data.rollbackWeekend === "boolean" ? data.rollbackWeekend : true,
+        };
+      }
+    }
+  } catch (error) {
+    console.error("Error reading payday config, using default", error);
+  }
+  // Default fallback: 20th with weekend rollback
+  return {
+    ruleType: "fixed_date",
+    fixedDate: 20,
+    rollbackWeekend: true,
+  };
+}
+
 const MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 export function getActualPayday(month: number, year: number): Date {
   // month is 1-indexed here (1 = Jan, 12 = Dec)
-  // Payday is always the 20th; if it falls on a weekend, paid on the preceding Friday
-  const date = new Date(year, month - 1, 20);
-  const dayOfWeek = date.getDay(); // 0 = Sunday, 6 = Saturday
+  const config = getPaydayConfig();
+  let date: Date;
 
-  if (dayOfWeek === 6) {
-    // Saturday → Friday the 19th
-    date.setDate(19);
-  } else if (dayOfWeek === 0) {
-    // Sunday → Friday the 18th
-    date.setDate(18);
+  if (config.ruleType === "last_working_day") {
+    // Last day of the month
+    date = new Date(year, month, 0);
+    const dayOfWeek = date.getDay(); // 0 = Sunday, 6 = Saturday
+    if (dayOfWeek === 6) {
+      date.setDate(date.getDate() - 1);
+    } else if (dayOfWeek === 0) {
+      date.setDate(date.getDate() - 2);
+    }
+  } else if (config.ruleType === "last_friday") {
+    // Last Friday of the month
+    date = new Date(year, month, 0);
+    const dayOfWeek = date.getDay();
+    const daysToSubtract = (dayOfWeek + 2) % 7;
+    date.setDate(date.getDate() - daysToSubtract);
+  } else {
+    // fixed_date
+    const fixedDate = config.fixedDate ?? 20;
+    const maxDays = new Date(year, month, 0).getDate();
+    const actualDay = Math.min(fixedDate, maxDays);
+    date = new Date(year, month - 1, actualDay);
+
+    if (config.rollbackWeekend ?? true) {
+      const dayOfWeek = date.getDay();
+      if (dayOfWeek === 6) {
+        date.setDate(date.getDate() - 1);
+      } else if (dayOfWeek === 0) {
+        date.setDate(date.getDate() - 2);
+      }
+    }
   }
 
   return date;
@@ -56,14 +114,30 @@ export function getCurrentPaydayCycle(referenceDate: Date = new Date()): { start
 }
 
 // ---------------------------------------------------------------------------
-// Dashboard cycle logic — fixed 17th boundary, no weekend adjustment.
+// Dashboard cycle logic — dynamic boundary based on settings config.
 // Used only by the historical pacing dashboard. Does NOT affect subscriptions
 // or credit card payment logic (which use getCurrentPaydayCycle above).
 // ---------------------------------------------------------------------------
 
-/** Returns the fixed 17th of the given month — no weekend adjustment. */
+/** Returns the cycle boundary of the given month — no weekend adjustment. */
 export function getCycleBoundary(month: number, year: number): Date {
-  return new Date(year, month - 1, 17);
+  const config = getPaydayConfig();
+  let boundaryDay = 17; // default for fixedDate = 20
+
+  if (config.ruleType === "fixed_date") {
+    const fixedDate = config.fixedDate ?? 20;
+    boundaryDay = Math.max(1, fixedDate - 3);
+  } else if (config.ruleType === "last_working_day") {
+    boundaryDay = 25; // Last working day is always 28th or later, so 25th is safe
+  } else if (config.ruleType === "last_friday") {
+    boundaryDay = 22; // Last Friday is always 22nd or later, so 22nd is safe
+  }
+
+  // Ensure boundaryDay is within valid range for the month
+  const maxDays = new Date(year, month, 0).getDate();
+  const actualBoundaryDay = Math.min(boundaryDay, maxDays);
+
+  return new Date(year, month - 1, actualBoundaryDay);
 }
 
 /** Like getCurrentPaydayCycle but uses the fixed 17th as the cycle boundary. */
