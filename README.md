@@ -1,5 +1,7 @@
 # Firefly Personal Financial Dashboard
 
+[![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-Donate-orange?style=flat-square&logo=buy-me-a-coffee)](https://buymeacoffee.com/giorobert)
+
 An interactive, responsive financial dashboard optimized for mobile layouts, connecting directly to a **Firefly III** instance. Designed to track Safe-to-Spend pacing, upcoming cycle outgoings, and categorizing transactions on the fly.
 
 ## Key Features
