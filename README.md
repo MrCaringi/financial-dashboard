@@ -175,4 +175,4 @@ If you enjoy using this dashboard and would like to support its ongoing developm
 
 ## License
 
-MIT
+GNU General Public License v3 (GPLv3) - see the [LICENSE](file:///Users/robertheyworth/Home%20Server/Pi5/financial-dashboard/LICENSE) file for details.
