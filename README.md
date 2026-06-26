@@ -70,6 +70,18 @@ The dashboard automatically styles categories and maps them to icons and colors 
 
 ---
 
+## Firefly III Prerequisites
+
+Before launching the dashboard, make sure your Firefly III instance has the following:
+
+1. **Asset Account**: At least one active asset account (e.g., your primary checking/current account).
+2. **Personal Access Token (PAT)**: Generate a new token in Firefly III under **Options > Profile > OAuth > Personal Access Tokens**.
+3. **Credit Card Classification**: For the dashboard to identify an account as a credit card, make sure its **Role** is set to **Credit Card** in Firefly III (or its name contains `"credit card"`).
+
+*Note: All other settings (such as marking your primary current account or setting credit card statement/due dates) can be configured directly in the Dashboard UI. The dashboard stores these preferences as JSON metadata inside the notes field of your accounts in Firefly III.*
+
+---
+
 ## Getting Started (Docker)
 
 The application is distributed as a pre-built multi-architecture Docker image (`linux/amd64` and `linux/arm64`) via GitHub Container Registry (GHCR), meaning you don't even need the source code to run it.
