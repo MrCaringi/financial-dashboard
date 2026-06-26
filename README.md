@@ -163,6 +163,16 @@ src/
 
 ---
 
+## Support & AI Collaboration
+
+This is my first coding project built in collaboration with an AI partner. Leveraging AI has allowed me to design, build, secure, and package this dashboard as a production-ready Docker container, showing just how powerful human-AI pair programming can be.
+
+If you enjoy using this dashboard and would like to support its ongoing development, please consider donating:
+
+[![Buy Me a Coffee](https://img.shields.io/badge/Buy%2520Me%2520a%2520Coffee-Donate-orange?style=flat-square&logo=buy-me-a-coffee)](https://buymeacoffee.com/giorobert)
+
+---
+
 ## License
 
 MIT
