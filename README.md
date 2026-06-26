@@ -97,44 +97,7 @@ To stop the dashboard: `docker compose down`. To inspect output: `docker compose
 
 Navigate to `http://localhost:3001` (or your server's IP). On first launch, you will be prompted to create a dashboard password to protect access to your financial data.
 
----
 
-## Local Development (Optional)
-
-If you want to run the project locally or build the Docker image yourself:
-
-### Running Locally
-1. **Configure environment**:
-   ```bash
-   cp .env.example .env.local
-   ```
-   Generate a session secret in `.env.local`.
-2. **Install dependencies**:
-   ```bash
-   npm install
-   ```
-3. **Run in development**:
-   ```bash
-   npm run dev
-   ```
-   The dashboard will be available at [http://localhost:3001](http://localhost:3001).
-
-### Building & Running Locally with Docker
-1. **Build the image**:
-   ```bash
-   docker build -t financial-dashboard:local .
-   ```
-2. **Run the container**:
-   ```bash
-   docker run -d \
-     -p 3001:3000 \
-     --env-file .env.local \
-     -v dashboard_data:/app/data \
-     --name financial-dashboard \
-     financial-dashboard:local
-   ```
-
----
 
 ## Project Structure
 
