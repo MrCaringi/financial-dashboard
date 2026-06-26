@@ -41,17 +41,35 @@ Here is a preview of the mobile-first dashboard running in **Demo Mode**:
 
 ---
 
-## Getting Started
+## Getting Started (Docker)
 
-### 1. Configure Environment
+The application is distributed as a pre-built multi-architecture Docker image (`linux/amd64` and `linux/arm64`) via GitHub Container Registry (GHCR), meaning you don't even need the source code to run it.
 
-Copy the example environment file and fill in your values:
+### 1. Prepare Configuration
 
-```bash
-cp .env.example .env.local
+Create a dedicated directory on your server and prepare the following files:
+
+**docker-compose.yml**:
+```yaml
+services:
+  dashboard:
+    image: ghcr.io/giorobert88/financial-dashboard:latest
+    container_name: firefly-dashboard
+    restart: unless-stopped
+    ports:
+      - "3001:3000"
+    env_file:
+      - .env.local
+    environment:
+      - AUTH_FILE_PATH=/app/data/.dashboard_auth
+    volumes:
+      - dashboard_data:/app/data
+
+volumes:
+  dashboard_data:
 ```
 
-Then edit `.env.local`:
+**.env.local**:
 ```env
 SESSION_SECRET="generate-with-openssl-rand-base64-32"
 
@@ -60,86 +78,52 @@ SESSION_SECRET="generate-with-openssl-rand-base64-32"
 # FIREFLY_PAT="your-firefly-personal-access-token"
 ```
 
-> **Tips:**
+> [!TIP]
 > - Generate a secure session secret with: `openssl rand -base64 32`
-> - **Mandatory Environment Variable**: `SESSION_SECRET` is the only environment variable strictly required to start the app.
-> - **API Connection**: You can configure your Firefly III API URL and Personal Access Token (PAT) directly in the dashboard UI under **Settings > API Connection**. They will be saved securely on the server. Alternatively, you can pre-configure them by uncommenting the environment variables above.
+> - **API Connection**: You can configure your Firefly III API URL and Personal Access Token (PAT) directly in the dashboard UI under **Settings > API Connection**. Alternatively, you can pre-configure them by uncommenting the environment variables in `.env.local`.
 
-### 2. Install Dependencies
+### 2. Start the Container
 
+Run the following command in the same directory:
 ```bash
-npm install
+docker compose up -d
 ```
-
-### 3. Run in Development
-
-```bash
-npm run dev
-```
-
-The dashboard will be available at [http://localhost:3001](http://localhost:3001).
-
-### 4. First-Time Setup
-
-On first launch, you'll be prompted to create a dashboard password. This password is stored locally on the server and used to protect access to your financial data.
-
----
-
-## Docker Deployment
-
-The application is distributed as a pre-built multi-architecture Docker image (`linux/amd64` and `linux/arm64`) via GitHub Container Registry (GHCR), meaning you don't even need the source code to run it.
-
-### Running with Docker
-
-1. **Prepare configuration files** in a dedicated directory on your server:
-
-   **docker-compose.yml**:
-   ```yaml
-   services:
-     dashboard:
-       image: ghcr.io/giorobert88/financial-dashboard:latest
-       container_name: firefly-dashboard
-       restart: unless-stopped
-       ports:
-         - "3001:3000"
-       env_file:
-         - .env.local
-       environment:
-         - AUTH_FILE_PATH=/app/data/.dashboard_auth
-       volumes:
-         - dashboard_data:/app/data
-
-   volumes:
-     dashboard_data:
-   ```
-
-   **.env.local**:
-   ```env
-   SESSION_SECRET="generate-with-openssl-rand-base64-32"
-
-   # Optional (Can be configured in the UI instead)
-   # FIREFLY_API_URL="http://your-firefly-server:8080"
-   # FIREFLY_PAT="your-firefly-personal-access-token"
-   ```
-
-2. **Start the container**:
-   ```bash
-   docker compose up -d
-   ```
 
 To stop the dashboard: `docker compose down`. To inspect output: `docker compose logs -f`.
 
 *Note: The `./data` directory will be created automatically to securely persist your dashboard password across container updates.*
 
+### 3. First-Time Setup
+
+Navigate to `http://localhost:3001` (or your server's IP). On first launch, you will be prompted to create a dashboard password to protect access to your financial data.
+
+---
+
+## Local Development (Optional)
+
+If you want to run the project locally or build the Docker image yourself:
+
+### Running Locally
+1. **Configure environment**:
+   ```bash
+   cp .env.example .env.local
+   ```
+   Generate a session secret in `.env.local`.
+2. **Install dependencies**:
+   ```bash
+   npm install
+   ```
+3. **Run in development**:
+   ```bash
+   npm run dev
+   ```
+   The dashboard will be available at [http://localhost:3001](http://localhost:3001).
+
 ### Building & Running Locally with Docker
-
-If you want to build and run the Docker image locally from source:
-
 1. **Build the image**:
    ```bash
    docker build -t financial-dashboard:local .
    ```
-
 2. **Run the container**:
    ```bash
    docker run -d \
