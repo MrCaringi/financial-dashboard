@@ -41,6 +41,35 @@ Here is a preview of the mobile-first dashboard running in **Demo Mode**:
 
 ---
 
+## Built-in Category Styling
+
+The dashboard automatically styles categories and maps them to icons and colors using their names in Firefly III (case-insensitive). To get pretty icons out-of-the-box, name your Firefly III categories to match or contain any of the following:
+
+| Category Types / Keywords | Style / Icon | Color Theme |
+| :--- | :---: | :---: |
+| `Groceries`, `Grocery`, `Supermarket` | ShoppingCart 🛒 | Amber |
+| `Eating out`, `Dining out`, `Restaurants`, `Takeaway`, `Coffee` | Utensils 🍽️ | Orange |
+| `Rent`, `Mortgage`, `Housing`, `Home maintenance` | Home 🏠 | Indigo / Amber |
+| `Subscriptions`, `Subscription` | CalendarDays 📅 | Cyan |
+| `Salary`, `Income`, `Other income`, `Benefit payment` | Banknote / Coins 💵 | Emerald |
+| `Gas & electricity`, `Utilities`, `Electricity`, `Power`, `Water` | Zap ⚡ | Cyan |
+| `Transport`, `Car`, `Fuel`, `Gas`, `Parking` | Car / Fuel 🚗 | Blue |
+| `Gym`, `Fitness` | Dumbbell 🏋️ | Rose |
+| `Healthcare`, `Medical`, `Dentist`, `Health` | HeartPulse 🏥 | Rose |
+| `Entertainment`, `Hobbies`, `Leisure` | Film / Palette 🎭 | Violet |
+| `Holidays`, `Travel`, `Days out` | Plane / Compass ✈️ | Sky / Orange |
+| `Clothing`, `Clothes`, `Clothing & shoes` | Shirt 👕 | Amber |
+| `Car insurance`, `Home insurance`, `Insurance` | Shield 🛡️ | Blue |
+| `Credit card`, `Credit card payments`, `Loans` | CreditCard 💳 | Cyan / Rose |
+| `Savings`, `Saving` | PiggyBank 🏦 | Emerald |
+| `Baby`, `Maternity`, `Child & dependent expenses` | Baby / Smile 👶 | Pink |
+| `Pets` | PawPrint 🐾 | Orange |
+| `Charity` | Heart ❤️ | Rose |
+| `Taxes`, `Tax`, `Council tax`, `Road tax` | FileText 📄 | Zinc |
+| `Cash`, `Cash withdrawals` | Banknote 💵 | Zinc |
+
+---
+
 ## Getting Started (Docker)
 
 The application is distributed as a pre-built multi-architecture Docker image (`linux/amd64` and `linux/arm64`) via GitHub Container Registry (GHCR), meaning you don't even need the source code to run it.
