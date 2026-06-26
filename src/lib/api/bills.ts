@@ -122,7 +122,7 @@ export async function getBillTransactions(id: string): Promise<Transaction[]> {
     }).sort((a: any, b: any) => new Date(b.rawDate).getTime() - new Date(a.rawDate).getTime())
       .map(({ rawDate: _, ...rest }: any) => rest as Transaction);
   } catch (error) {
-    console.error(`Failed to fetch transactions for bill ${id}`, error);
+    console.error("Failed to fetch transactions for bill:", id, error);
     return [];
   }
 }

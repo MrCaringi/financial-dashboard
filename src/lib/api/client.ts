@@ -137,7 +137,8 @@ export async function fetchFirefly(
   const response = await fetch(url.toString(), fetchOptions);
 
   if (!response.ok) {
-    console.error(`Firefly API Error: ${response.status} - ${response.statusText}`, await response.text());
+    const errorText = await response.text();
+    console.error("Firefly API Error:", response.status, response.statusText, errorText);
     throw new Error(`Firefly API failed: ${response.statusText}`);
   }
 

@@ -64,7 +64,7 @@ export default async function SubscriptionDetailPage(props: PageProps) {
       categories = fetchedCategories;
     }
   } catch (error: any) {
-    console.error(`Error loading detail page for bill ${id}:`, error);
+    console.error("Error loading detail page for bill:", id, error);
     errorMsg = error.message || "Failed to load subscription details";
   }
 

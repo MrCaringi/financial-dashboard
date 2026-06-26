@@ -34,7 +34,7 @@ export default async function AccountDetailPage(props: PageProps) {
     transactions = fetchedTransactions;
     categories = fetchedCategories;
   } catch (error: any) {
-    console.error(`Error loading detail page for account ${id}:`, error);
+    console.error("Error loading detail page for account:", id, error);
     errorMsg = error.message || "Failed to load account details";
   }
 

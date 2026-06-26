@@ -34,7 +34,7 @@ export default async function CreditCardDetailPage(props: PageProps) {
     categories = fetchedCategories;
     upcomingPayment = upcomingBalances.find(p => p.id === id);
   } catch (error: any) {
-    console.error(`Error loading detail page for credit card ${id}:`, error);
+    console.error("Error loading detail page for credit card:", id, error);
     errorMsg = error.message || "Failed to load credit card details";
   }
 

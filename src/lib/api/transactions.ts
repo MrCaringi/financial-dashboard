@@ -439,7 +439,7 @@ export async function getCategorySpendingHistory(
     );
     return results;
   } catch (error) {
-    console.warn(`Failed to fetch category history for ${category}, falling back to mock data`, error);
+    console.warn("Failed to fetch category history, falling back to mock data:", category, error);
     const lowerCategory = category.toLowerCase();
     
     return cycles.map((cycle, index) => {

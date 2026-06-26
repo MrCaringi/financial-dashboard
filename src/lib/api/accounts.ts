@@ -186,7 +186,7 @@ export async function getCreditCardBalances(preFetchedAccounts?: any[]): Promise
       }
       isPaid = totalTransfers >= payment * 0.95;
     } catch (err) {
-      console.warn(`Failed to fetch transactions for credit card ${a.id} payment verification:`, err);
+      console.warn("Failed to fetch transactions for credit card payment verification:", a.id, err);
     }
 
     if (dueDate <= nextPayday) {
@@ -435,7 +435,7 @@ export async function getAccount(accountId: string): Promise<GroupedAccount> {
       paymentConfig
     };
   } catch (error) {
-    console.error(`Failed to fetch account ${accountId}, returning mock data if matching`, error);
+    console.error("Failed to fetch account, returning mock data if matching:", accountId, error);
     const allMockAccounts = [
       { id: "2", name: "Demo Current Account", role: "defaultAsset", balance: 1234.56, displayBalance: 1234.56, currencySymbol: "£", lastActivity: "2026-05-23T00:00:00Z", isPrimarySource: true, paymentConfig: null },
       { id: "57", name: "Demo Secondary Account", role: "defaultAsset", balance: 100.00, displayBalance: 100.00, currencySymbol: "£", lastActivity: "2026-05-22T00:00:00Z", isPrimarySource: false, paymentConfig: null },
@@ -472,7 +472,7 @@ export async function getAccountTransactions(accountId: string, limit = 15): Pro
       };
     });
   } catch (error) {
-    console.warn(`Failed to fetch transactions for account ${accountId}, using mock fallback`, error);
+    console.warn("Failed to fetch transactions for account, using mock fallback:", accountId, error);
     return getMockTransactions(accountId);
   }
 }
@@ -599,7 +599,7 @@ export async function getCreditCardPayments(accountId: string): Promise<Transact
       new Date(b.rawDate).getTime() - new Date(a.rawDate).getTime()
     );
   } catch (error) {
-    console.warn(`Failed to fetch payments for credit card ${accountId}, using mock fallback`, error);
+    console.warn("Failed to fetch payments for credit card, using mock fallback:", accountId, error);
     return getMockPayments(accountId);
   }
 }
