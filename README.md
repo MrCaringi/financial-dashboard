@@ -53,14 +53,17 @@ cp .env.example .env.local
 
 Then edit `.env.local`:
 ```env
-FIREFLY_API_URL="http://your-firefly-server:8080"
-FIREFLY_PAT="your-firefly-personal-access-token"
 SESSION_SECRET="generate-with-openssl-rand-base64-32"
+
+# Optional (Can be configured in the UI instead)
+# FIREFLY_API_URL="http://your-firefly-server:8080"
+# FIREFLY_PAT="your-firefly-personal-access-token"
 ```
 
 > **Tips:**
 > - Generate a secure session secret with: `openssl rand -base64 32`
-> - You can obtain your `FIREFLY_PAT` (Personal Access Token) inside Firefly III by navigating to **Options > Profile > OAuth > Personal Access Tokens** and generating a new token.
+> - **Mandatory Environment Variable**: `SESSION_SECRET` is the only environment variable strictly required to start the app.
+> - **API Connection**: You can configure your Firefly III API URL and Personal Access Token (PAT) directly in the dashboard UI under **Settings > API Connection**. They will be saved securely on the server. Alternatively, you can pre-configure them by uncommenting the environment variables above.
 
 ### 2. Install Dependencies
 
@@ -112,9 +115,11 @@ The application is distributed as a pre-built multi-architecture Docker image (`
 
    **.env.local**:
    ```env
-   FIREFLY_API_URL="http://your-firefly-server:8080"
-   FIREFLY_PAT="your-firefly-personal-access-token"
    SESSION_SECRET="generate-with-openssl-rand-base64-32"
+
+   # Optional (Can be configured in the UI instead)
+   # FIREFLY_API_URL="http://your-firefly-server:8080"
+   # FIREFLY_PAT="your-firefly-personal-access-token"
    ```
 
 2. **Start the container**:
