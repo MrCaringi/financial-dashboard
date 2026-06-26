@@ -126,6 +126,25 @@ To stop the dashboard: `docker compose down`. To inspect output: `docker compose
 
 *Note: The `./data` directory will be created automatically to securely persist your dashboard password across container updates.*
 
+### Building & Running Locally with Docker
+
+If you want to build and run the Docker image locally from source:
+
+1. **Build the image**:
+   ```bash
+   docker build -t financial-dashboard:local .
+   ```
+
+2. **Run the container**:
+   ```bash
+   docker run -d \
+     -p 3001:3000 \
+     --env-file .env.local \
+     -v dashboard_data:/app/data \
+     --name financial-dashboard \
+     financial-dashboard:local
+   ```
+
 ---
 
 ## Project Structure
@@ -145,7 +164,8 @@ src/
 ├── lib/
 │   ├── api/             # Firefly III API client & data fetching
 │   └── ...              # Utilities, formatting, payday logic
-└── middleware.ts        # Auth middleware
+├── proxy.ts             # Request routing and proxy logic
+└── sw.ts                # Service worker source (Serwist)
 ```
 
 ---
