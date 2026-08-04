@@ -17,7 +17,7 @@ interface TransactionItem {
 }
 
 export function SubscriptionHistoryChart({ transactions }: { transactions: TransactionItem[] }) {
-  const { symbol } = useCurrency();
+  const { symbol, fmt } = useCurrency();
 
   // Extract dates and absolute amounts for the chart (usually subscriptions are expenses, so amounts are negative)
   // We want to show the positive payment values chronologically (oldest to newest)
@@ -59,7 +59,7 @@ export function SubscriptionHistoryChart({ transactions }: { transactions: Trans
       tooltip: {
         ...chartTheme.plugins.tooltip,
         callbacks: {
-          label: chartHelpers.tooltipCurrencyLabelCallback,
+          label: chartHelpers.makeTooltipCurrencyLabelCallback(fmt),
         }
       }
     },

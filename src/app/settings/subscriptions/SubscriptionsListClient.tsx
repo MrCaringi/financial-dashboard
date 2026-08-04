@@ -6,7 +6,6 @@ import Link from "next/link";
 import { Bill } from "@/lib/api/bills";
 import { getCategoryStyle } from "@/lib/category-icons";
 import { PageHeader } from "@/components/PageHeader";
-import { fmt } from "@/lib/format";
 import { useCurrency } from "@/components/CurrencyContext";
 import { createBillAction } from "@/app/settings/actions";
 

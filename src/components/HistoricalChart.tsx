@@ -19,7 +19,7 @@ interface HistoricalChartProps {
 
 export function HistoricalChart({ data }: HistoricalChartProps) {
   const router = useRouter();
-  const { symbol } = useCurrency();
+  const { symbol, fmt } = useCurrency();
 
   const chartData = useMemo(() => ({
     labels: data.map(d => d.label),
@@ -50,7 +50,7 @@ export function HistoricalChart({ data }: HistoricalChartProps) {
       tooltip: {
         ...chartTheme.plugins.tooltip,
         callbacks: {
-          label: chartHelpers.tooltipCurrencyLabelCallback,
+          label: chartHelpers.makeTooltipCurrencyLabelCallback(fmt),
         }
       }
     },

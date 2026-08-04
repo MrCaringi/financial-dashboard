@@ -22,7 +22,7 @@ interface CategoryBarChartProps {
 
 export function CategoryBarChart({ data, category, isIncome }: CategoryBarChartProps) {
   const router = useRouter();
-  const { symbol } = useCurrency();
+  const { symbol, fmt } = useCurrency();
 
   const chartData = useMemo(() => {
     const style = getCategoryStyle(category);
@@ -53,7 +53,7 @@ export function CategoryBarChart({ data, category, isIncome }: CategoryBarChartP
       tooltip: {
         ...chartTheme.plugins.tooltip,
         callbacks: {
-          label: chartHelpers.tooltipCurrencyLabelCallback,
+          label: chartHelpers.makeTooltipCurrencyLabelCallback(fmt),
         },
       },
     },

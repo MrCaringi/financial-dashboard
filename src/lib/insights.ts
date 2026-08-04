@@ -1,5 +1,3 @@
-import { fmt } from "@/lib/format";
-
 export interface Insight {
   id: string;
   type: "burn-pace" | "projected-negative" | "uncategorized-triage";
@@ -21,9 +19,13 @@ interface InsightParams {
   daysElapsed: number;         // days into the current cycle (0-indexed)
   uncategorizedCount: number;
   cycleId: string;             // e.g. "2026-06"
+  /** Currency formatter — when omitted a plain numeric fallback is used. */
+  fmt?: (n: number) => string;
 }
 
 const MAX_INSIGHTS = 2;
+
+const fallbackFmt = (n: number) => n.toFixed(2);
 
 /**
  * Pure function — takes pre-computed metrics from the dashboard data layer
@@ -32,6 +34,7 @@ const MAX_INSIGHTS = 2;
  */
 export function generateInsights(params: InsightParams): Insight[] {
   const insights: Insight[] = [];
+  const fmt = params.fmt ?? fallbackFmt;
 
   // --- 1. Projected Negative Balance (Priority: highest) ---
   if (params.finalProjectedBalance < 0 && params.negativeDate) {
@@ -60,7 +63,7 @@ export function generateInsights(params: InsightParams): Insight[] {
     const absDiff = Math.abs(diff);
     const pctDiff = (diff / params.prevBurn) * 100;
 
-    // Only trigger if difference is meaningful: >15% AND >£20
+    // Only trigger if difference is meaningful: >15% AND >20 in currency
     if (Math.abs(pctDiff) >= 15 && absDiff >= 20) {
       const isOver = diff > 0;
       insights.push({

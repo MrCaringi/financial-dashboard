@@ -77,7 +77,7 @@ export function BurnComparisonChart({
       tooltip: {
         ...chartTheme.plugins.tooltip,
         callbacks: {
-          label: chartHelpers.tooltipCurrencyLabelCallback,
+          label: chartHelpers.makeTooltipCurrencyLabelCallback(fmt),
         },
       },
     },

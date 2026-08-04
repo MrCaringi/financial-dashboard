@@ -7,6 +7,8 @@ import { getUncategorizedTransactions } from "@/lib/firefly";
 import { getDashboardCycle } from "@/lib/payday";
 import { generateInsights } from "@/lib/insights";
 import { InsightCard } from "@/components/InsightCard";
+import { formatCurrency } from "@/lib/format";
+import { getDisplayCurrency } from "@/lib/currency";
 
 interface InsightsSectionProps {
   now: Date;
@@ -15,11 +17,13 @@ interface InsightsSectionProps {
 export async function InsightsSection({ now }: InsightsSectionProps) {
   // These fetches are deduped at the Next.js fetch() layer — AccountsSection,
   // BurnSection, and UncategorizedBadge make the same underlying API calls.
-  const [accountsData, burnData, uncategorizedTx] = await Promise.all([
+  const [accountsData, burnData, uncategorizedTx, displayCurrency] = await Promise.all([
     getAccountsSummaryData(now).catch(() => null),
     getBurnComparisonData(now).catch(() => null),
     getUncategorizedTransactions(30).catch(() => []),
+    getDisplayCurrency(),
   ]);
+  const fmt = (n: number) => formatCurrency(n, displayCurrency.code);
 
   // If data failed to load, don't show insights
   if (!accountsData || !burnData) return null;
@@ -50,6 +54,7 @@ export async function InsightsSection({ now }: InsightsSectionProps) {
     daysElapsed: todayIndex,
     uncategorizedCount: uncategorizedTx.length,
     cycleId,
+    fmt,
   });
 
   // If no insights qualify, render nothing — no empty wrapper

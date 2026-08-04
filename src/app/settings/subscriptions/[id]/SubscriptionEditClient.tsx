@@ -11,7 +11,6 @@ import { Bill } from "@/lib/api/bills";
 import { Rule } from "@/lib/api/rules";
 import { PageHeader } from "@/components/PageHeader";
 import { updateBillAction } from "@/app/settings/actions";
-import { fmt } from "@/lib/format";
 import { useCurrency } from "@/components/CurrencyContext";
 
 interface SubscriptionEditClientProps {

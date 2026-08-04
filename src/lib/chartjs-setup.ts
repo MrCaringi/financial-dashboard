@@ -88,18 +88,23 @@ export const chartTheme = {
 
 export { ChartJS };
 
-import { fmt } from "@/lib/format";
-
 export const chartHelpers = {
-  tooltipCurrencyLabelCallback: function (context: any) {
-    let label = context.dataset.label || "";
-    if (label) {
-      label += ": ";
-    }
-    if (context.parsed.y !== null) {
-      label += fmt(context.parsed.y);
-    }
-    return label;
+  /**
+   * Returns a Chart.js tooltip label callback that formats values
+   * using the given currency formatter.  When no formatter is supplied,
+   * it falls back to the raw numeric value.
+   */
+  makeTooltipCurrencyLabelCallback(fmtFn: (n: number) => string) {
+    return function (context: any) {
+      let label = context.dataset.label || "";
+      if (label) {
+        label += ": ";
+      }
+      if (context.parsed.y !== null) {
+        label += fmtFn(context.parsed.y);
+      }
+      return label;
+    };
   },
   onHoverPointer: (_event: any, elements: any[], chart: any) => {
     chart.canvas.style.cursor = elements.length > 0 ? "pointer" : "default";
