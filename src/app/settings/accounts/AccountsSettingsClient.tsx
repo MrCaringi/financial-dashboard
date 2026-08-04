@@ -6,6 +6,8 @@ import { GroupedAccount, CreditCardConfig } from "@/lib/firefly";
 import { setPrimaryAccount, updateCreditCardConfig } from "../actions";
 import { Sliders, CreditCard, Loader2, Check, AlertCircle, Save, ChevronDown, ChevronUp, AlertTriangle } from "lucide-react";
 
+import { useCurrency } from "@/components/CurrencyContext";
+
 interface AccountsSettingsClientProps {
   currentAccounts: GroupedAccount[];
   creditCardAccounts: GroupedAccount[];
@@ -18,6 +20,7 @@ export function AccountsSettingsClient({
   initialPrimaryAccountId,
 }: AccountsSettingsClientProps) {
   const router = useRouter();
+  const { symbol } = useCurrency();
 
   // --- Primary Account State ---
   const [primaryAccountId, setPrimaryAccountId] = useState<string>(
@@ -141,6 +144,7 @@ function CreditCardFormCard({
   card: GroupedAccount;
 }) {
   const router = useRouter();
+  const { symbol } = useCurrency();
   const [isOpen, setIsOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [status, setStatus] = useState<{
@@ -356,7 +360,7 @@ function CreditCardFormCard({
 
               <div className="flex flex-col gap-1.5">
                 <label htmlFor={`min-floor-${card.id}`} className="text-xs font-bold text-zinc-400 uppercase tracking-wide">
-                  Min Floor (£)
+                  Min Floor ({symbol})
                 </label>
                 <input
                   id={`min-floor-${card.id}`}

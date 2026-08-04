@@ -1,6 +1,7 @@
 import { fetchFirefly, parseNotes, mutateFirefly } from "./client";
 import { getCurrentPaydayCycle, formatDateString } from "../payday";
 import { Transaction } from "./transactions";
+import { getDisplayCurrency } from "../currency";
 
 export interface CreditCardPayment {
   id: string;
@@ -214,9 +215,10 @@ export async function getCreditCardBalances(preFetchedAccounts?: any[]): Promise
 }
 
 export async function getGroupedAccounts(): Promise<AccountGroup[]> {
-  const [assetData, liabilityData] = await Promise.all([
+  const [assetData, liabilityData, defaultDisplayCurrency] = await Promise.all([
     fetchFirefly("/accounts", { type: "asset" }),
-    fetchFirefly("/accounts", { type: "liability" })
+    fetchFirefly("/accounts", { type: "liability" }),
+    getDisplayCurrency().catch(() => ({ symbol: "£" })),
   ]);
 
   const allAccounts = [...(assetData.data || []), ...(liabilityData.data || [])];
@@ -262,7 +264,7 @@ export async function getGroupedAccounts(): Promise<AccountGroup[]> {
       balance,
       displayBalance,
       role,
-      currencySymbol: attr.currency_symbol || "£",
+      currencySymbol: attr.currency_symbol || defaultDisplayCurrency.symbol || "£",
       lastActivity: attr.last_activity || null,
       isPrimarySource,
       paymentConfig

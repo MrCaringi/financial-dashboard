@@ -6,6 +6,8 @@ import dynamic from 'next/dynamic';
 
 const Line = dynamic(() => import('react-chartjs-2').then((mod) => mod.Line), { ssr: false });
 
+import { useCurrency } from "@/components/CurrencyContext";
+
 interface TransactionItem {
   id: string;
   name: string;
@@ -15,6 +17,8 @@ interface TransactionItem {
 }
 
 export function SubscriptionHistoryChart({ transactions }: { transactions: TransactionItem[] }) {
+  const { symbol } = useCurrency();
+
   // Extract dates and absolute amounts for the chart (usually subscriptions are expenses, so amounts are negative)
   // We want to show the positive payment values chronologically (oldest to newest)
   const sortedData = useMemo(() => {
@@ -71,12 +75,12 @@ export function SubscriptionHistoryChart({ transactions }: { transactions: Trans
         ticks: {
           ...chartTheme.scales.y.ticks,
           callback: function(value: any) {
-            return "£" + value;
+            return symbol + value;
           }
         }
       }
     }
-  }), []);
+  }), [symbol]);
 
   if (transactions.length === 0) {
     return (

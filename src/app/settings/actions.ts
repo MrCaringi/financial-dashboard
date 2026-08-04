@@ -310,3 +310,37 @@ export async function updatePaydayConfigAction(
     return { success: false, error: err.message || "Failed to update payday configuration" };
   }
 }
+
+import { setDefaultCurrencyApi } from "@/lib/api/currencies";
+
+export async function setDisplayCurrencyAction(currency: {
+  id?: string;
+  code: string;
+  symbol: string;
+  name: string;
+  decimalPlaces: number;
+}): Promise<{ success: boolean; error?: string }> {
+  try {
+    const { cookies } = await import("next/headers");
+    const cookieStore = await cookies();
+    cookieStore.set("display_currency", JSON.stringify(currency), { path: "/", maxAge: 60 * 60 * 24 * 365 });
+
+    if (currency.id || currency.code) {
+      await setDefaultCurrencyApi(currency.id || currency.code).catch(() => false);
+    }
+
+    clearNetWorthCache();
+    revalidatePath("/");
+    revalidatePath("/accounts");
+    revalidatePath("/settings");
+    revalidatePath("/settings/currency");
+    revalidatePath("/dashboard");
+    revalidatePath("/uncategorized");
+
+    return { success: true };
+  } catch (err: any) {
+    console.error("Error setting display currency:", err);
+    return { success: false, error: err.message || "Failed to update display currency" };
+  }
+}
+

@@ -2,7 +2,7 @@
 
 import React, { useMemo } from "react";
 import { chartTheme, chartHelpers } from "@/lib/chartjs-setup";
-import { fmt } from "@/lib/format";
+import { useCurrency } from "@/components/CurrencyContext";
 import dynamic from "next/dynamic";
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 
@@ -23,6 +23,7 @@ export function BurnComparisonChart({
   prevTotal,
   isMock = false,
 }: BurnComparisonChartProps) {
+  const { symbol, fmt } = useCurrency();
 
   const todayIndex = Math.max(0, currentCumulative.length - 1);
   const currentSoFar = currentCumulative[todayIndex] || 0;
@@ -30,47 +31,44 @@ export function BurnComparisonChart({
   const diffSoFar = currentSoFar - prevAtSameDay;
   const isUnder = diffSoFar <= 0;
 
-  // Determine chart labels (Day 1, Day 2, etc.)
-  const maxDays = Math.max(currentCumulative.length, prevCumulative.length, 30);
-  const labels = Array.from({ length: maxDays }, (_, i) => `Day ${i + 1}`);
+  const chartData = useMemo(() => {
+    const daysCount = Math.max(currentCumulative.length, prevCumulative.length);
+    const labels = Array.from({ length: daysCount }, (_, i) => `Day ${i + 1}`);
 
-  // Create chart data config
-  const chartData = useMemo(() => ({
-    labels,
-    datasets: [
-      {
-        label: "This Cycle",
-        data: currentCumulative,
-        borderColor: "rgba(99, 102, 241, 0.95)", // Indigo-500
-        backgroundColor: "rgba(99, 102, 241, 0.1)",
-        borderWidth: 2.5,
-        pointRadius: (ctx: any) => (ctx.dataIndex === todayIndex ? 6 : 0),
-        pointHoverRadius: 6,
-        pointBackgroundColor: "rgba(99, 102, 241, 1)",
-        pointBorderColor: "#fff",
-        pointBorderWidth: 1.5,
-        tension: 0.3,
-        fill: true,
-      },
-      {
-        label: "Previous Cycle",
-        data: prevCumulative,
-        borderColor: "rgba(161, 161, 170, 0.4)", // Zinc-400
-        backgroundColor: "transparent",
-        borderWidth: 2,
-        borderDash: [5, 5],
-        pointRadius: 0,
-        pointHoverRadius: 4,
-        tension: 0.3,
-        fill: false,
-      },
-    ],
-  }), [labels, currentCumulative, prevCumulative, todayIndex]);
+    return {
+      labels,
+      datasets: [
+        {
+          label: "Current Cycle",
+          data: currentCumulative,
+          borderColor: "rgb(236, 72, 153)", // Primary accent pink/rose
+          backgroundColor: "rgba(236, 72, 153, 0.1)",
+          borderWidth: 2,
+          fill: true,
+          tension: 0.2,
+          pointRadius: 0,
+          pointHoverRadius: 4,
+        },
+        {
+          label: "Previous Cycle",
+          data: prevCumulative,
+          borderColor: "rgba(255, 255, 255, 0.3)",
+          borderDash: [4, 4],
+          borderWidth: 1.5,
+          fill: false,
+          tension: 0.2,
+          pointRadius: 0,
+          pointHoverRadius: 4,
+        },
+      ],
+    };
+  }, [currentCumulative, prevCumulative]);
 
   const chartOptions = useMemo(() => ({
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
+      ...chartTheme.plugins,
       legend: {
         ...chartTheme.plugins.legend,
         display: true,
@@ -95,11 +93,11 @@ export function BurnComparisonChart({
         ...chartTheme.scales.y,
         ticks: {
           ...chartTheme.scales.y.ticks,
-          callback: (value: any) => `£${value}`,
+          callback: (value: any) => `${symbol}${value}`,
         },
       },
     },
-  }), []);
+  }), [symbol]);
 
   return (
     <div className="glass-card p-4 flex flex-col gap-4">

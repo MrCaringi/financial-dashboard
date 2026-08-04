@@ -6,7 +6,7 @@ import { PageHeader } from "@/components/PageHeader";
 import { TransactionList } from "@/components/TransactionList";
 import { BottomSheetDrawer } from "@/components/ui/BottomSheetDrawer";
 import { RichTransaction } from "@/lib/api/transactions";
-import { fmt } from "@/lib/format";
+import { useCurrency } from "@/components/CurrencyContext";
 import { useRouter, useSearchParams } from "next/navigation";
 
 const PERIOD_OPTIONS = [
@@ -33,6 +33,7 @@ export function AllTransactionsView({
   currentDays,
   initialAccount
 }: AllTransactionsViewProps) {
+  const { symbol, fmt } = useCurrency();
   const router = useRouter();
   const searchParams = useSearchParams();
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -324,13 +325,13 @@ export function AllTransactionsView({
             
             {/* Range Pills */}
             <div className="flex flex-wrap gap-1.5">
-              {([
-                { label: "Any Amount", value: "all" },
-                { label: "< £10", value: "<10" },
-                { label: "£10 - £50", value: "10-50" },
-                { label: "£50 - £100", value: "50-100" },
-                { label: "£100+", value: ">100" },
-              ] as const).map((pill) => {
+              {[
+                { label: "Any Amount", value: "all" as const },
+                { label: `< ${symbol}10`, value: "<10" as const },
+                { label: `${symbol}10 - ${symbol}50`, value: "10-50" as const },
+                { label: `${symbol}50 - ${symbol}100`, value: "50-100" as const },
+                { label: `${symbol}100+`, value: ">100" as const },
+              ].map((pill) => {
                 const isActive = amountRange === pill.value && minAmount === "" && maxAmount === "";
                 return (
                   <button
@@ -355,7 +356,7 @@ export function AllTransactionsView({
             {/* Custom Amount Inputs */}
             <div className="flex items-center gap-2 mt-1">
               <div className="flex-1 relative">
-                <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-xs text-zinc-500">Min (£)</span>
+                <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-xs text-zinc-500">Min ({symbol})</span>
                 <input
                   type="number"
                   placeholder="0"
@@ -369,7 +370,7 @@ export function AllTransactionsView({
               </div>
               <span className="text-zinc-500 text-xs">to</span>
               <div className="flex-1 relative">
-                <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-xs text-zinc-500">Max (£)</span>
+                <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-xs text-zinc-500">Max ({symbol})</span>
                 <input
                   type="number"
                   placeholder="No limit"

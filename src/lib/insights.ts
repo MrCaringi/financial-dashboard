@@ -46,7 +46,7 @@ export function generateInsights(params: InsightParams): Insight[] {
       severity: "error",
       icon: "alert-octagon",
       title: "Balance projected to go negative",
-      description: `Your current account will drop below £0 by ${formatted} if all upcoming payments go through. Projected: ${fmt(params.finalProjectedBalance)}`,
+      description: `Your current account will drop below ${fmt(0)} by ${formatted} if all upcoming payments go through. Projected: ${fmt(params.finalProjectedBalance)}`,
       actionLabel: "View Upcoming",
       actionHref: "/#upcoming",
       cycleId: params.cycleId,

@@ -177,7 +177,7 @@ export default async function AccountsPage() {
                           <span className="font-semibold text-zinc-200">
                             {account.paymentConfig.calcType === "full"
                               ? "Pay Statement In Full"
-                              : `Pay Min (${account.paymentConfig.minPercent ? Math.round(account.paymentConfig.minPercent * 1000) / 10 : 2.5}% / £${account.paymentConfig.minFloor || 5} floor)`}
+                              : `Pay Min (${account.paymentConfig.minPercent ? Math.round(account.paymentConfig.minPercent * 1000) / 10 : 2.5}% / ${account.currencySymbol || "£"}${account.paymentConfig.minFloor || 5} floor)`}
                           </span>
                         </div>
                         <div className="flex justify-between items-center text-xs text-zinc-500">

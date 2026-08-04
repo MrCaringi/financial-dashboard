@@ -6,6 +6,8 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { getCategoryStyle } from "@/lib/category-icons";
 
+import { useCurrency } from "@/components/CurrencyContext";
+
 const Bar = dynamic(() => import("react-chartjs-2").then((mod) => mod.Bar), { ssr: false });
 
 interface CategoryBarChartProps {
@@ -20,6 +22,7 @@ interface CategoryBarChartProps {
 
 export function CategoryBarChart({ data, category, isIncome }: CategoryBarChartProps) {
   const router = useRouter();
+  const { symbol } = useCurrency();
 
   const chartData = useMemo(() => {
     const style = getCategoryStyle(category);
@@ -66,7 +69,7 @@ export function CategoryBarChart({ data, category, isIncome }: CategoryBarChartP
         ticks: {
           ...chartTheme.scales.y.ticks,
           callback: function (value: any) {
-            return "£" + value;
+            return symbol + value;
           },
         },
       },
@@ -80,7 +83,7 @@ export function CategoryBarChart({ data, category, isIncome }: CategoryBarChartP
       }
     },
     onHover: chartHelpers.onHoverPointer,
-  }), [data, category, isIncome, router]);
+  }), [data, category, isIncome, router, symbol]);
 
   return (
     <div className="w-full" style={{ position: "relative", height: "14rem" }}>

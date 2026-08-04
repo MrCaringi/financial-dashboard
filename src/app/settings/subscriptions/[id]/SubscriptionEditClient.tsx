@@ -12,6 +12,7 @@ import { Rule } from "@/lib/api/rules";
 import { PageHeader } from "@/components/PageHeader";
 import { updateBillAction } from "@/app/settings/actions";
 import { fmt } from "@/lib/format";
+import { useCurrency } from "@/components/CurrencyContext";
 
 interface SubscriptionEditClientProps {
   bill: Bill;
@@ -27,6 +28,7 @@ const FREQ_OPTIONS = [
 ];
 
 export function SubscriptionEditClient({ bill, linkedRules }: SubscriptionEditClientProps) {
+  const { symbol, fmt } = useCurrency();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -159,7 +161,7 @@ export function SubscriptionEditClient({ bill, linkedRules }: SubscriptionEditCl
 
           <div className="grid grid-cols-2 gap-3">
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="sub-min" className="text-xs font-bold text-zinc-400 uppercase tracking-wide">Min (£)</label>
+              <label htmlFor="sub-min" className="text-xs font-bold text-zinc-400 uppercase tracking-wide">Min ({symbol})</label>
               <input
                 id="sub-min"
                 type="number"
@@ -173,7 +175,7 @@ export function SubscriptionEditClient({ bill, linkedRules }: SubscriptionEditCl
               />
             </div>
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="sub-max" className="text-xs font-bold text-zinc-400 uppercase tracking-wide">Max (£)</label>
+              <label htmlFor="sub-max" className="text-xs font-bold text-zinc-400 uppercase tracking-wide">Max ({symbol})</label>
               <input
                 id="sub-max"
                 type="number"

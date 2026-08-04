@@ -6,6 +6,8 @@ import { cn } from "@/lib/utils";
 import { EditTransactionProvider } from "@/components/EditTransactionContext";
 import { EditTransactionDrawer } from "@/components/EditTransactionDrawer";
 import { getCategories } from "@/lib/firefly";
+import { getDisplayCurrency } from "@/lib/currency";
+import { CurrencyProvider } from "@/components/CurrencyContext";
 
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
@@ -31,20 +33,30 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   // Pre-fetch categories lists statically/cached so we have it for the select options
-  const categories = await getCategories().catch(() => []);
+  const [categories, displayCurrency] = await Promise.all([
+    getCategories().catch(() => []),
+    getDisplayCurrency().catch(() => ({
+      code: "GBP",
+      symbol: "£",
+      name: "British Pound",
+      decimalPlaces: 2,
+    })),
+  ]);
 
   return (
     <html lang="en" className={cn("dark", "font-sans", geist.variable)}>
       <body className="antialiased pb-20">
-        <EditTransactionProvider categories={categories}>
-          {/* Main Content */}
-          <main className="min-h-screen">
-            {children}
-          </main>
+        <CurrencyProvider initialCurrency={displayCurrency}>
+          <EditTransactionProvider categories={categories}>
+            {/* Main Content */}
+            <main className="min-h-screen">
+              {children}
+            </main>
 
-          {/* Edit Transaction Drawer */}
-          <EditTransactionDrawer />
-        </EditTransactionProvider>
+            {/* Edit Transaction Drawer */}
+            <EditTransactionDrawer />
+          </EditTransactionProvider>
+        </CurrencyProvider>
 
         {/* Bottom Navigation for Mobile */}
         <BottomNav />

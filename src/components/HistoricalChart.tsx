@@ -6,6 +6,8 @@ import dynamic from 'next/dynamic';
 const Bar = dynamic(() => import('react-chartjs-2').then((mod) => mod.Bar), { ssr: false });
 import { useRouter } from 'next/navigation';
 
+import { useCurrency } from "@/components/CurrencyContext";
+
 interface HistoricalChartProps {
   data: {
     id: string;
@@ -17,6 +19,7 @@ interface HistoricalChartProps {
 
 export function HistoricalChart({ data }: HistoricalChartProps) {
   const router = useRouter();
+  const { symbol } = useCurrency();
 
   const chartData = useMemo(() => ({
     labels: data.map(d => d.label),
@@ -63,7 +66,7 @@ export function HistoricalChart({ data }: HistoricalChartProps) {
         ticks: {
           ...chartTheme.scales.y.ticks,
           callback: function(value: any) {
-            return '£' + value;
+            return symbol + value;
           }
         }
       }
@@ -78,7 +81,7 @@ export function HistoricalChart({ data }: HistoricalChartProps) {
       }
     },
     onHover: chartHelpers.onHoverPointer,
-  }), [data, router]);
+  }), [data, router, symbol]);
 
   return (
     <div className="w-full" style={{ position: 'relative', height: '16rem' }}>

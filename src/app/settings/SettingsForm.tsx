@@ -14,7 +14,8 @@ import {
   Calendar,
   Wallet,
   AlertTriangle,
-  MonitorPlay
+  MonitorPlay,
+  Coins
 } from "lucide-react";
 
 import Link from "next/link";
@@ -153,7 +154,30 @@ export function SettingsForm({
         </Link>
       </div>
 
-      {/* 4. API Connection Card */}
+      {/* 4. Display Currency Navigation Card */}
+      <div className="glass-card overflow-hidden">
+        <Link
+          href="/settings/currency"
+          className="w-full text-left p-4 flex items-center justify-between gap-4 hover:bg-white/5 active:bg-white/10 transition-colors block"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-amber-500/10 text-amber-400">
+              <Coins size={20} />
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold text-zinc-100">Display Currency</h3>
+              <p className="text-xs text-zinc-450 mt-0.5">
+                Set preferred dashboard currency symbol & format.
+              </p>
+            </div>
+          </div>
+          <div className="text-zinc-400">
+            <ChevronDown size={16} className="-rotate-90" />
+          </div>
+        </Link>
+      </div>
+
+      {/* 5. API Connection Card */}
       <div className="glass-card overflow-hidden">
         <Link
           href="/settings/connection"

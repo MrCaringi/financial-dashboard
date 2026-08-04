@@ -152,7 +152,7 @@ export async function fetchFirefly(
 /** Mutation helper for PUT/PATCH requests to Firefly III */
 export async function mutateFirefly(
   endpoint: string,
-  method: "PUT" | "PATCH",
+  method: "POST" | "PUT" | "PATCH",
   body: unknown,
 ): Promise<Response> {
   const isDemo = await isDemoModeActive();

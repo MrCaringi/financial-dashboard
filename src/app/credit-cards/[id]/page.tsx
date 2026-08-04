@@ -64,7 +64,7 @@ export default async function CreditCardDetailPage(props: PageProps) {
       strategyText = "Full Statement Balance";
     } else if (account.paymentConfig.calcType === "min") {
       const minPercent = ((account.paymentConfig.minPercent || 0.01) * 100).toFixed(1);
-      strategyText = `Min Payment (${minPercent}% / min £${account.paymentConfig.minFloor || 25})`;
+      strategyText = `Min Payment (${minPercent}% / min ${account.currencySymbol || "£"}${account.paymentConfig.minFloor || 25})`;
     }
   }
 

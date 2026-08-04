@@ -5,11 +5,14 @@ import { saveAccountConfig } from "./actions";
 import { GroupedAccount } from "@/lib/firefly";
 import { Save, Loader2, Check, AlertCircle, Sparkles } from "lucide-react";
 
+import { useCurrency } from "@/components/CurrencyContext";
+
 interface AccountSettingsFormProps {
   account: GroupedAccount;
 }
 
 export function AccountSettingsForm({ account }: AccountSettingsFormProps) {
+  const { symbol } = useCurrency();
   const isCc = account.role === "ccAsset" || account.role === "ccLiability";
   
   // States
@@ -218,7 +221,7 @@ export function AccountSettingsForm({ account }: AccountSettingsFormProps) {
                     Minimum Floor
                   </label>
                   <div className="relative flex items-center">
-                    <span className="absolute left-3 text-sm text-zinc-500 pointer-events-none">£</span>
+                    <span className="absolute left-3 text-sm text-zinc-500 pointer-events-none">{symbol}</span>
                     <input
                       id="min-floor"
                       type="number"

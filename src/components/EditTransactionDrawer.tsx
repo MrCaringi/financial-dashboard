@@ -19,7 +19,10 @@ import {
   FolderOpen
 } from "lucide-react";
 
+import { useCurrency } from "@/components/CurrencyContext";
+
 export function EditTransactionDrawer() {
+  const { symbol } = useCurrency();
   const { isOpen, transaction } = useEditTransaction();
 
   if (!isOpen || !transaction) return null;
@@ -29,6 +32,7 @@ export function EditTransactionDrawer() {
 }
 
 function EditTransactionForm() {
+  const { symbol } = useCurrency();
   const {
     isOpen,
     isLoading,
@@ -205,7 +209,7 @@ function EditTransactionForm() {
                 {/* Amount */}
                 <div className="flex items-center gap-2.5 bg-zinc-900/30 border border-zinc-800/40 p-3 rounded-2xl">
                   <div className="w-8 h-8 rounded-full bg-zinc-900 flex items-center justify-center text-zinc-400">
-                    <span className="font-semibold text-sm">£</span>
+                    <span className="font-semibold text-sm">{symbol}</span>
                   </div>
                   <div className="flex-1">
                     <label className="text-[10px] text-zinc-500 font-semibold uppercase tracking-wider block">Amount</label>

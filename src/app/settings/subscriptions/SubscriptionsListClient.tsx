@@ -7,6 +7,7 @@ import { Bill } from "@/lib/api/bills";
 import { getCategoryStyle } from "@/lib/category-icons";
 import { PageHeader } from "@/components/PageHeader";
 import { fmt } from "@/lib/format";
+import { useCurrency } from "@/components/CurrencyContext";
 import { createBillAction } from "@/app/settings/actions";
 
 interface SubscriptionsListClientProps {
@@ -14,6 +15,7 @@ interface SubscriptionsListClientProps {
 }
 
 export function SubscriptionsListClient({ initialBills }: SubscriptionsListClientProps) {
+  const { symbol, fmt } = useCurrency();
   const [bills, setBills] = useState<Bill[]>(initialBills);
   const [search, setSearch] = useState("");
   const [collapsedGroups, setCollapsedGroups] = useState<Record<string, boolean>>({});
@@ -220,7 +222,7 @@ export function SubscriptionsListClient({ initialBills }: SubscriptionsListClien
                     type="number"
                     step="0.01"
                     min="0.01"
-                    placeholder="Amount (£)..."
+                    placeholder={`Amount (${symbol})...`}
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
                     className="bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-1.5 text-xs text-zinc-100 placeholder-zinc-500 outline-none focus:border-zinc-700 w-full"
