@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 import { Tag, Loader2, X, Check } from "lucide-react";
 import { getCategoryStyle } from "@/lib/category-icons";
 import { useCategorySelection } from "@/hooks/useCategorySelection";
-import { fmt } from "@/lib/format";
+import { useCurrency } from "./CurrencyContext";
 import { useVisualViewport } from "@/hooks/useVisualViewport";
 
 interface CategoryDrawerProps {
@@ -29,6 +29,7 @@ export function CategoryDrawer({
   transactionName,
   transactionAmount,
 }: CategoryDrawerProps) {
+  const { fmt } = useCurrency();
   const { style: viewportStyle } = useVisualViewport();
   const {
     query,

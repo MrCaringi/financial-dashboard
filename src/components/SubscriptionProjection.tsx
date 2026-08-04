@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import { chartTheme } from "@/lib/chartjs-setup";
-import { fmt } from "@/lib/format";
+import { useCurrency } from "./CurrencyContext";
 import dynamic from 'next/dynamic';
 const Line = dynamic(() => import('react-chartjs-2').then((mod) => mod.Line), { ssr: false });
 
@@ -29,6 +29,7 @@ export function SubscriptionProjection({
   bills: Bill[];
   cards: CreditCardPayment[];
 }) {
+  const { fmt } = useCurrency();
   const unpaidBills = useMemo(() => bills.filter(b => !b.isPaid && b.expectedInCycle), [bills]);
   const unpaidCards = useMemo(() => (cards || []).filter(c => c.dueDate !== null && c.balance > 0 && !c.isPaid), [cards]);
   

@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import { chartTheme } from "@/lib/chartjs-setup";
-import { fmt } from "@/lib/format";
+import { useCurrency } from "./CurrencyContext";
 import dynamic from 'next/dynamic';
 const Doughnut = dynamic(() => import('react-chartjs-2').then((mod) => mod.Doughnut), { ssr: false });
 import { useRouter } from 'next/navigation';
@@ -20,6 +20,7 @@ interface CategoryDoughnutProps {
 
 export function CategoryDoughnut({ periodId, data, linkable = true, linkQueryParam }: CategoryDoughnutProps) {
   const router = useRouter();
+  const { fmt } = useCurrency();
 
   const chartData = useMemo(() => {
     const backgroundColors = data.map(d => {

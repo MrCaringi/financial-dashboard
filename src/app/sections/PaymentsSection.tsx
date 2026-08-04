@@ -3,10 +3,15 @@ import Link from "next/link";
 import { getUpcomingPaymentsData } from "@/lib/dashboard-data";
 import { SubscriptionProjection } from "@/components/SubscriptionProjection";
 import { CalendarClock, CreditCard } from "lucide-react";
-import { fmt } from "@/lib/format";
+import { formatCurrency } from "@/lib/format";
+import { getDisplayCurrency } from "@/lib/currency";
 
 export async function PaymentsSection() {
-  const data = await getUpcomingPaymentsData();
+  const [data, displayCurrency] = await Promise.all([
+    getUpcomingPaymentsData(),
+    getDisplayCurrency(),
+  ]);
+  const fmt = (n: number, opts?: Intl.NumberFormatOptions) => formatCurrency(n, displayCurrency.code, opts);
 
   return (
     <section id="upcoming" className="flex flex-col gap-4 scroll-mt-20">

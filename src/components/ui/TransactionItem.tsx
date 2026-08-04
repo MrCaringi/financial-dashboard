@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { fmt } from "@/lib/format";
+import { useCurrency } from "../CurrencyContext";
 import { Tag, ChevronDown, Sparkles, RefreshCw, Loader2, ReceiptText, Check } from "lucide-react";
 import { CategoryCombobox } from "../CategoryCombobox";
 import { getCategoryStyle } from "@/lib/category-icons";
@@ -47,6 +47,7 @@ export const TransactionItem = React.memo(function TransactionItem({
   isUncategorizedView = false,
   closeOnSelect = true,
 }: TransactionItemProps) {
+  const { fmt } = useCurrency();
   const style = getCategoryStyle(transaction.category);
   const IconComponent = style.icon;
   const { openEditTransaction } = useEditTransaction();

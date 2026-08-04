@@ -2,7 +2,8 @@ import { getAccount, getAccountTransactions, getCategories, Transaction } from "
 import { Wallet, PiggyBank, CreditCard, Activity, Calendar } from "lucide-react";
 import { PageHeader } from "@/components/PageHeader";
 import Link from "next/link";
-import { fmt } from "@/lib/format";
+import { formatCurrency } from "@/lib/format";
+import { getDisplayCurrency } from "@/lib/currency";
 import { TransactionList } from "@/components/TransactionList";
 import { AccountTabs } from "./AccountTabs";
 import { AccountSettingsForm } from "./AccountSettingsForm";
@@ -22,6 +23,8 @@ export default async function AccountDetailPage(props: PageProps) {
   let transactions: Transaction[] = [];
   let categories: string[] = [];
   let errorMsg = "";
+  const displayCurrency = await getDisplayCurrency();
+  const fmt = (n: number, opts?: Intl.NumberFormatOptions) => formatCurrency(n, displayCurrency.code, opts);
 
   try {
     const [fetchedAccount, fetchedTransactions, fetchedCategories] = await Promise.all([

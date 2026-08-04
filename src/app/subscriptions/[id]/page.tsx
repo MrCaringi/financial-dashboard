@@ -2,7 +2,8 @@ import { getBillDetails, getBillTransactions, getCategories } from "@/lib/firefl
 import { Calendar, Globe, AlertTriangle, ArrowUpRight, TrendingUp, CheckCircle, HelpCircle, Settings } from "lucide-react";
 import { PageHeader } from "@/components/PageHeader";
 import Link from "next/link";
-import { fmt } from "@/lib/format";
+import { formatCurrency } from "@/lib/format";
+import { getDisplayCurrency } from "@/lib/currency";
 import { getCategoryStyle } from "@/lib/category-icons";
 import { SubscriptionHistoryChart } from "@/components/SubscriptionHistoryChart";
 import { TransactionList } from "@/components/TransactionList";
@@ -20,6 +21,8 @@ export default async function SubscriptionDetailPage(props: PageProps) {
   let transactions: any[] = [];
   let categories: string[] = [];
   let errorMsg = "";
+  const displayCurrency = await getDisplayCurrency();
+  const fmt = (n: number, opts?: Intl.NumberFormatOptions) => formatCurrency(n, displayCurrency.code, opts);
 
   try {
     if (id.startsWith("mock-")) {

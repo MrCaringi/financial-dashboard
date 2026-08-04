@@ -1,6 +1,7 @@
 import { getCycleForMonth, getAdjacentCycles, formatDateString, getDashboardCycle, getPastCyclesFrom } from "@/lib/payday";
 import { getCategoryTransactions, getCategorySpendingHistory, getCategories } from "@/lib/firefly";
-import { fmt } from "@/lib/format";
+import { formatCurrency } from "@/lib/format";
+import { getDisplayCurrency } from "@/lib/currency";
 import { ReceiptText, TrendingUp, Info } from "lucide-react";
 import { PageHeader } from "@/components/PageHeader";
 import { CycleNavigation } from "@/components/CycleNavigation";
@@ -21,6 +22,8 @@ export default async function CategoryLedgerPage({
 }) {
   const { period, category } = await params;
   const { type } = await searchParams;
+  const displayCurrency = await getDisplayCurrency();
+  const fmt = (n: number, opts?: Intl.NumberFormatOptions) => formatCurrency(n, displayCurrency.code, opts);
 
   const isIncome = type === "income";
   const decodedCategory = decodeURIComponent(category);

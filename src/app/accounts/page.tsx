@@ -2,7 +2,8 @@ import { getGroupedAccounts, AccountGroup } from "@/lib/firefly";
 import { Wallet, PiggyBank, CreditCard, Activity } from "lucide-react";
 import { PageHeader } from "@/components/PageHeader";
 import Link from "next/link";
-import { fmt } from "@/lib/format";
+import { formatCurrency } from "@/lib/format";
+import { getDisplayCurrency } from "@/lib/currency";
 
 export const dynamic = "force-dynamic";
 
@@ -28,7 +29,7 @@ const mockGroups: AccountGroup[] = [
   {
     label: "Credit Cards",
     icon: "CreditCard",
-    subtotal: 15245.38,
+    subtotal: 15955.38,
     accounts: [
       { id: "1", name: "Demo Credit Card A", role: "ccAsset", balance: -4005.30, displayBalance: 4005.30, currencySymbol: "£", lastActivity: "2026-05-20T00:00:00Z", isPrimarySource: false, paymentConfig: { calcType: "full", statementDay: 15, dueDay: 11 } },
       { id: "100", name: "Demo Credit Card B", role: "ccAsset", balance: -197.90, displayBalance: 197.90, currencySymbol: "£", lastActivity: "2026-05-18T00:00:00Z", isPrimarySource: false, paymentConfig: { calcType: "full", statementDay: 5, dueDay: 28 } },
@@ -47,6 +48,8 @@ const iconMap = {
 export default async function AccountsPage() {
   let groups: AccountGroup[] = [];
   let isMock = false;
+  const displayCurrency = await getDisplayCurrency();
+  const fmt = (n: number, opts?: Intl.NumberFormatOptions) => formatCurrency(n, displayCurrency.code, opts);
 
   try {
     groups = await getGroupedAccounts();

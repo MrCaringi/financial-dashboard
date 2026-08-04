@@ -4,7 +4,8 @@ import { PageHeader } from "@/components/PageHeader";
 import { HistoricalChart } from "@/components/HistoricalChart";
 import { BarChart3, ChevronLeft, ChevronRight, CalendarDays } from "lucide-react";
 import Link from "next/link";
-import { fmt } from "@/lib/format";
+import { formatCurrency } from "@/lib/format";
+import { getDisplayCurrency } from "@/lib/currency";
 
 export const dynamic = "force-dynamic";
 
@@ -15,6 +16,8 @@ interface PageProps {
 export default async function DashboardPage(props: PageProps) {
   const searchParams = await props.searchParams;
   const end = searchParams.end;
+  const displayCurrency = await getDisplayCurrency();
+  const fmt = (n: number, opts?: Intl.NumberFormatOptions) => formatCurrency(n, displayCurrency.code, opts);
 
   const today = new Date();
   const currentCycle = getDashboardCycle(today);

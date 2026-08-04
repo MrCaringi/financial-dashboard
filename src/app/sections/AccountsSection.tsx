@@ -2,14 +2,19 @@ import React from "react";
 import { getAccountsSummaryData } from "@/lib/dashboard-data";
 import { getActualPayday } from "@/lib/payday";
 import { Wallet, ReceiptText, Check, AlertCircle } from "lucide-react";
-import { fmt } from "@/lib/format";
+import { formatCurrency } from "@/lib/format";
+import { getDisplayCurrency } from "@/lib/currency";
 
 interface AccountsSectionProps {
   now: Date;
 }
 
 export async function AccountsSection({ now }: AccountsSectionProps) {
-  const data = await getAccountsSummaryData(now);
+  const [data, displayCurrency] = await Promise.all([
+    getAccountsSummaryData(now),
+    getDisplayCurrency(),
+  ]);
+  const fmt = (n: number, opts?: Intl.NumberFormatOptions) => formatCurrency(n, displayCurrency.code, opts);
 
   const todayMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   let nextPayday = getActualPayday(now.getMonth() + 1, now.getFullYear());

@@ -2,7 +2,8 @@ import { getAccount, getCreditCardPayments, getCategories, getCreditCardBalances
 import { CreditCard, Calendar, AlertTriangle, CheckCircle, HelpCircle, TrendingUp, Info, Settings } from "lucide-react";
 import { PageHeader } from "@/components/PageHeader";
 import Link from "next/link";
-import { fmt } from "@/lib/format";
+import { formatCurrency } from "@/lib/format";
+import { getDisplayCurrency } from "@/lib/currency";
 import { SubscriptionHistoryChart } from "@/components/SubscriptionHistoryChart";
 import { TransactionList } from "@/components/TransactionList";
 
@@ -20,6 +21,8 @@ export default async function CreditCardDetailPage(props: PageProps) {
   let categories: string[] = [];
   let upcomingPayment: any = null;
   let errorMsg = "";
+  const displayCurrency = await getDisplayCurrency();
+  const fmt = (n: number, opts?: Intl.NumberFormatOptions) => formatCurrency(n, displayCurrency.code, opts);
 
   try {
     const [fetchedAccount, fetchedPayments, fetchedCategories, upcomingBalances] = await Promise.all([
